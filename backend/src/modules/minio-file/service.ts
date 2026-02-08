@@ -42,6 +42,7 @@ class MinioFileProviderService extends AbstractFileProviderService {
   protected client: Client
   protected readonly bucket: string
   protected readonly useSSL: boolean
+  protected readonly port: number
 
   constructor({ logger }: InjectedDependencies, options: MinioFileProviderOptions) {
     super()
@@ -83,6 +84,7 @@ class MinioFileProviderService extends AbstractFileProviderService {
     // Use provided bucket or default
     this.bucket = this.config_.bucket || DEFAULT_BUCKET
     this.useSSL = useSSL
+    this.port = port
     this.logger_.info(`MinIO service initialized with bucket: ${this.bucket}, endpoint: ${endPoint}, port: ${port}, SSL: ${useSSL}`)
 
     // Initialize Minio client with parsed settings
@@ -224,7 +226,9 @@ class MinioFileProviderService extends AbstractFileProviderService {
 
       // Generate URL using the endpoint and bucket with correct protocol
       const protocol = this.useSSL ? 'https' : 'http'
-      const url = `${protocol}://${this.config_.endPoint}/${this.bucket}/${fileKey}`
+      const defaultPort = this.useSSL ? 443 : 80
+      const portSuffix = this.port !== defaultPort ? `:${this.port}` : ''
+      const url = `${protocol}://${this.config_.endPoint}${portSuffix}/${this.bucket}/${fileKey}`
 
       this.logger_.info(`Successfully uploaded file ${fileKey} to MinIO bucket ${this.bucket}`)
 
