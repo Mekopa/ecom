@@ -7,35 +7,68 @@ const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
 // Country code → default locale mapping for auto-detection
 const countryToLocale: Record<string, string> = {
-  us: "en",
-  ca: "en",
-  gb: "en",
-  de: "de",
-  fr: "fr",
-  nl: "en",
-  it: "en",
-  es: "en",
-  tr: "tr",
-  pl: "pl",
-  lt: "lt",
-  ee: "et",
-  lv: "lv",
+  // EU countries
+  at: "de",  // Austria → German
+  be: "fr",  // Belgium → French
+  bg: "en",  // Bulgaria
+  hr: "en",  // Croatia
+  cy: "en",  // Cyprus
+  cz: "en",  // Czech Republic
+  dk: "en",  // Denmark
+  ee: "et",  // Estonia → Estonian
+  fi: "en",  // Finland
+  fr: "fr",  // France → French
+  de: "de",  // Germany → German
+  gr: "en",  // Greece
+  hu: "en",  // Hungary
+  ie: "en",  // Ireland → English
+  it: "en",  // Italy
+  lv: "lv",  // Latvia → Latvian
+  lt: "lt",  // Lithuania → Lithuanian
+  lu: "fr",  // Luxembourg → French
+  mt: "en",  // Malta → English
+  nl: "en",  // Netherlands
+  pl: "pl",  // Poland → Polish
+  pt: "en",  // Portugal
+  ro: "en",  // Romania
+  sk: "en",  // Slovakia
+  si: "en",  // Slovenia
+  es: "en",  // Spain
+  se: "en",  // Sweden
+  // Non-EU
+  gb: "en",  // United Kingdom → English
+  us: "en",  // United States → English
+  ca: "en",  // Canada → English
+  tr: "tr",  // Turkey → Turkish
 }
 
 // Language code → most likely country code mapping
 // Used when Accept-Language has no region subtag (e.g., "tr" instead of "tr-TR")
 const langToCountry: Record<string, string> = {
-  tr: "tr",
+  en: "us",
   de: "de",
   fr: "fr",
-  en: "us",
   nl: "nl",
   it: "it",
   es: "es",
+  tr: "tr",
   pl: "pl",
   lt: "lt",
   et: "ee",
   lv: "lv",
+  da: "dk",
+  fi: "fi",
+  el: "gr",
+  hu: "hu",
+  cs: "cz",
+  sk: "sk",
+  sl: "si",
+  hr: "hr",
+  bg: "bg",
+  ro: "ro",
+  pt: "pt",
+  sv: "se",
+  ga: "ie",
 }
 
 const regionMapCache = {
