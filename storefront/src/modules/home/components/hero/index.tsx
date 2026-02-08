@@ -28,11 +28,13 @@ const Hero = async () => {
   return (
     <HeroInteractive
       title={t("heroTitle")}
+      searchTitle={t("searchTitle")}
       subtitle={t("heroSubtitle")}
       placeholders={placeholders}
       noResultsText={t("noResults")}
       viewAllText={t("viewAll")}
       categories={topCategories}
+      browseCategoriesText={t("browseCategories")}
       trustBadges={[
         t("freeShipping"),
         t("returns"),

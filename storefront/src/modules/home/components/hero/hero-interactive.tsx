@@ -35,19 +35,23 @@ const TRUST_ICONS = [
 
 export default function HeroInteractive({
   title,
+  searchTitle,
   subtitle,
   placeholders,
   noResultsText,
   viewAllText,
   categories,
+  browseCategoriesText,
   trustBadges,
 }: {
   title: string
+  searchTitle: string
   subtitle: string
   placeholders: string[]
   noResultsText: string
   viewAllText: string
   categories: CategoryData[]
+  browseCategoriesText: string
   trustBadges: string[]
 }) {
   const { countryCode } = useParams<{ countryCode: string }>()
@@ -167,33 +171,61 @@ export default function HeroInteractive({
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-5 pt-20 pb-20 small:pt-28 small:pb-28">
-          {/* Title */}
-          <h1 className={`text-3xl small:text-5xl leading-tight font-bold text-gray-900 dark:text-white max-w-2xl transition-all duration-500 ${isFocused ? "opacity-40 scale-95 blur-[1px]" : ""}`}>
-            {title}
-          </h1>
+          {/* Title — morphs text on focus */}
+          <div className="relative h-[2.5rem] small:h-[3.5rem] flex items-center justify-center max-w-2xl">
+            <h1 className={`text-3xl small:text-5xl leading-tight font-bold text-gray-900 dark:text-white transition-all duration-500 ${isFocused ? "opacity-0 scale-95 absolute" : "opacity-100"}`}>
+              {title}
+            </h1>
+            <p className={`text-2xl small:text-4xl leading-tight font-bold text-gray-900 dark:text-white transition-all duration-500 ${isFocused ? "opacity-100" : "opacity-0 scale-95 absolute"}`}>
+              {searchTitle}
+            </p>
+          </div>
 
-          {/* Subtitle */}
-          <p className={`text-base small:text-lg text-blue-900/60 dark:text-blue-100/80 max-w-md font-light mt-4 transition-all duration-500 ${isFocused ? "opacity-0 -translate-y-2" : ""}`}>
-            {subtitle}
-          </p>
+          {/* Subtitle + Browse button — smooth collapse on focus */}
+          <div className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${isFocused ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"}`}>
+            <div className="overflow-hidden min-h-0">
+              <p className="text-base small:text-lg text-blue-900/60 dark:text-blue-100/80 max-w-md font-light mt-4 text-center">
+                {subtitle}
+              </p>
 
-          {/* Category pills */}
-          <div className={`flex gap-2 small:gap-3 mt-8 overflow-x-auto no-scrollbar max-w-full px-2 transition-all duration-500 ${isFocused ? "opacity-0 scale-95 -translate-y-2" : ""}`}>
-            {categories.map((cat) => {
-              const Icon = CategoryIcons[cat.handle] || CategoryIcons.accessories
-              return (
-                <LocalizedClientLink
-                  key={cat.id}
-                  href={`/categories/${cat.handle}`}
-                  className="flex items-center gap-2 flex-shrink-0 px-3.5 py-2 rounded-full bg-white/70 dark:bg-white/10 border border-gray-200/60 dark:border-white/10 backdrop-blur-sm hover:bg-white dark:hover:bg-white/20 transition-colors"
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    inputRef.current?.focus()
+                    setIsFocused(true)
+                  }}
+                  className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/70 dark:bg-white/10 border border-gray-200/60 dark:border-white/10 backdrop-blur-sm hover:bg-white dark:hover:bg-white/20 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all"
                 >
-                  <Icon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                    {cat.name}
-                  </span>
-                </LocalizedClientLink>
-              )
-            })}
+                  <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                  </svg>
+                  {browseCategoriesText}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Category grid — smooth expand on focus */}
+          <div className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${isFocused ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 pointer-events-none"}`}>
+            <div className="overflow-hidden min-h-0">
+              <div className="grid grid-cols-3 small:grid-cols-6 gap-3 small:gap-4 w-full max-w-2xl mx-auto">
+                {categories.map((cat) => {
+                  const Icon = CategoryIcons[cat.handle] || CategoryIcons.accessories
+                  return (
+                    <LocalizedClientLink
+                      key={cat.id}
+                      href={`/categories/${cat.handle}`}
+                      className="flex flex-col items-center gap-2 py-3 small:py-4 px-2 rounded-2xl bg-white/60 dark:bg-white/10 border border-gray-200/40 dark:border-white/10 backdrop-blur-sm hover:bg-white hover:scale-105 dark:hover:bg-white/20 transition-all"
+                    >
+                      <Icon className="w-6 h-6 small:w-8 small:h-8 text-blue-600 dark:text-blue-400" />
+                      <span className="text-xs small:text-sm font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
+                        {cat.name}
+                      </span>
+                    </LocalizedClientLink>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
