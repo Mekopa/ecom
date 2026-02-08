@@ -101,15 +101,15 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+8px)] right-0 w-[420px] text-ui-fg-base rounded-2xl shadow-2xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-gray-200/50 dark:border-white/10 ring-1 ring-black/5 dark:ring-white/10"
+            className="hidden small:block absolute top-[calc(100%+8px)] right-0 w-[420px] text-ui-fg-base rounded-2xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl backdrop-saturate-150 border border-gray-200/50 dark:border-white/10 ring-1 ring-black/5 dark:ring-white/10"
             data-testid="nav-cart-dropdown"
           >
-            <div className="p-4 flex items-center justify-center">
+            <div className="px-4 pt-4 pb-2 flex items-center justify-center">
               <h3 className="text-large-semi">{t("title")}</h3>
             </div>
             {cartState && cartState.items?.length ? (
               <>
-                <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
+                <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-4 no-scrollbar">
                   {cartState.items
                     .sort((a, b) => {
                       return (a.created_at ?? "") > (b.created_at ?? "")
@@ -118,13 +118,12 @@ const CartDropdown = ({
                     })
                     .map((item) => (
                       <div
-                        className="grid grid-cols-[122px_1fr] gap-x-4"
+                        className="grid grid-cols-[80px_1fr] gap-x-3"
                         key={item.id}
                         data-testid="cart-item"
                       >
                         <LocalizedClientLink
                           href={`/products/${item.product_handle}`}
-                          className="w-24"
                         >
                           <Thumbnail
                             thumbnail={item.thumbnail}
@@ -176,7 +175,7 @@ const CartDropdown = ({
                       </div>
                     ))}
                 </div>
-                <div className="p-4 flex flex-col gap-y-4 text-small-regular">
+                <div className="p-4 flex flex-col gap-y-3 text-small-regular">
                   <div className="flex items-center justify-between">
                     <span className="text-ui-fg-base font-semibold">
                       {t("subtotal")}{" "}
@@ -205,21 +204,14 @@ const CartDropdown = ({
                 </div>
               </>
             ) : (
-              <div>
-                <div className="flex py-16 flex-col gap-y-4 items-center justify-center">
-                  <div className="bg-gray-900 dark:bg-gray-100 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white dark:text-gray-900">
-                    <span>0</span>
-                  </div>
-                  <span>{t("emptyBag")}</span>
-                  <div>
-                    <LocalizedClientLink href="/store">
-                      <>
-                        <span className="sr-only">{t("exploreProducts")}</span>
-                        <Button onClick={close}>{t("exploreProducts")}</Button>
-                      </>
-                    </LocalizedClientLink>
-                  </div>
+              <div className="flex py-8 flex-col gap-y-3 items-center justify-center">
+                <div className="bg-gray-900 dark:bg-gray-100 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white dark:text-gray-900">
+                  <span>0</span>
                 </div>
+                <span>{t("emptyBag")}</span>
+                <LocalizedClientLink href="/store">
+                  <Button onClick={close}>{t("exploreProducts")}</Button>
+                </LocalizedClientLink>
               </div>
             )}
           </PopoverPanel>
