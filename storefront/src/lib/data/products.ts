@@ -93,6 +93,26 @@ export const getProductsList = cache(async function ({
  * This will fetch 100 products to the Next.js cache and sort them based on the sortBy parameter.
  * It will then return the paginated products based on the page and limit parameters.
  */
+export const searchProducts = async ({
+  query,
+  countryCode,
+  limit = 8,
+}: {
+  query: string
+  countryCode: string
+  limit?: number
+}) => {
+  if (!query.trim()) return { products: [], count: 0 }
+
+  const { response } = await getProductsList({
+    pageParam: 1,
+    queryParams: { q: query, limit },
+    countryCode,
+  })
+
+  return response
+}
+
 export const getProductsListWithSort = cache(async function ({
   page = 0,
   queryParams,
