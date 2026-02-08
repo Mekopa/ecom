@@ -6,20 +6,24 @@ import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import MobileSortDrawer from "@modules/store/components/mobile-sort-drawer"
+import BrandPills from "@modules/store/components/brand-pills"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { getTranslations } from "next-intl/server"
+import { resolveBrandFilter } from "@lib/util/resolve-brand-tags"
 
 export default async function CategoryTemplate({
   category,
   sortBy,
   page,
   countryCode,
+  brand,
 }: {
   category: HttpTypes.StoreProductCategory
   sortBy?: SortOptions
   page?: string
   countryCode: string
+  brand?: string | string[]
 }) {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
@@ -40,6 +44,9 @@ export default async function CategoryTemplate({
   }
 
   getParents(category)
+
+  const { brandItems, selectedBrandSlugs, selectedTagIds } =
+    await resolveBrandFilter(brand, { categoryId: category.id })
 
   return (
     <div
@@ -83,20 +90,13 @@ export default async function CategoryTemplate({
           </p>
         )}
 
-        {/* Subcategory Pills */}
-        {category.category_children && category.category_children.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {category.category_children.map((c) => (
-              <LocalizedClientLink
-                key={c.id}
-                href={`/categories/${c.handle}`}
-                className="px-3 py-1.5 rounded-full text-sm font-medium border bg-ui-bg-subtle text-ui-fg-base border-ui-border-base hover:bg-ui-bg-subtle-hover transition-colors"
-              >
-                {translateCat(c)}
-              </LocalizedClientLink>
-            ))}
+        {/* Brand Pills */}
+        {brandItems.length > 0 && (
+          <div className="mb-8">
+            <BrandPills brands={brandItems} selectedBrands={selectedBrandSlugs} />
           </div>
         )}
+
         <MobileSortDrawer sortBy={sort} />
         <Suspense
           fallback={
@@ -110,6 +110,7 @@ export default async function CategoryTemplate({
             page={pageNumber}
             categoryId={category.id}
             countryCode={countryCode}
+            tagIds={selectedTagIds}
           />
         </Suspense>
       </div>

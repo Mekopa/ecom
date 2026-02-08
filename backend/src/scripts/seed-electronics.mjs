@@ -95,6 +95,39 @@ async function deleteAllProducts() {
   console.log("✓ All products deleted");
 }
 
+async function deleteAllTags() {
+  const { product_tags } = await api("GET", "/admin/product-tags?limit=100");
+  if (!product_tags.length) {
+    console.log("  No existing tags to delete.");
+    return;
+  }
+  console.log(`  Deleting ${product_tags.length} existing tags...`);
+  for (const t of product_tags) {
+    await api("DELETE", `/admin/product-tags/${t.id}`);
+  }
+  console.log("✓ All tags deleted");
+}
+
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+async function createBrandTags(products) {
+  const brands = [...new Set(products.map((p) => p.brand))].sort();
+  console.log(`  Creating ${brands.length} brand tags...`);
+  const tagMap = {};
+  for (const brand of brands) {
+    const slug = slugify(brand);
+    const { product_tag } = await api("POST", "/admin/product-tags", {
+      value: `brand:${brand}`,
+      metadata: { type: "brand", display_name: brand, slug },
+    });
+    tagMap[brand] = product_tag.id;
+    console.log(`    ✓ brand:${brand} → ${product_tag.id}`);
+  }
+  return tagMap;
+}
+
 async function createProduct(data, index, total) {
   try {
     const { product } = await api("POST", "/admin/products", data);
@@ -111,8 +144,8 @@ async function createProduct(data, index, total) {
 }
 
 // ── Product builder ──────────────────────────────────────────────────
-function buildProduct(def) {
-  const { title, handle, description, category, options, basePriceUsd, priceAdders, skuBase, valueCodes, i18n } = def;
+function buildProduct(def, tagMap) {
+  const { title, handle, description, category, brand, options, basePriceUsd, priceAdders, skuBase, valueCodes, i18n } = def;
 
   const optionValues = options.map((o) => o.values);
   const combos = crossProduct(optionValues);
@@ -151,7 +184,8 @@ function buildProduct(def) {
     sales_channels: [{ id: SALES_CHANNEL_ID }],
     options: options.map((o) => ({ title: o.title, values: o.values })),
     variants,
-    metadata: { i18n },
+    metadata: { brand, i18n },
+    ...(tagMap && tagMap[brand] ? { tags: [{ id: tagMap[brand] }] } : {}),
   };
 }
 
@@ -163,6 +197,7 @@ const SMARTPHONES = [
   {
     title: "iPhone 16 Pro Max",
     handle: "iphone-16-pro-max",
+    brand: "Apple",
     description: "The ultimate iPhone experience with a 6.9-inch Super Retina XDR display, A18 Pro chip, 48MP camera system with 5x optical zoom, and all-day battery life. Features titanium design and USB-C connectivity.",
     category: "smartphones",
     skuBase: "IPH16PM",
@@ -186,6 +221,7 @@ const SMARTPHONES = [
   {
     title: "iPhone 16",
     handle: "iphone-16",
+    brand: "Apple",
     description: "Powerful and colorful. Features a 6.1-inch Super Retina XDR display, A18 chip, advanced dual-camera system with 48MP main sensor, and Dynamic Island.",
     category: "smartphones",
     skuBase: "IPH16",
@@ -209,6 +245,7 @@ const SMARTPHONES = [
   {
     title: "Samsung Galaxy S25 Ultra",
     handle: "galaxy-s25-ultra",
+    brand: "Samsung",
     description: "Samsung's most powerful smartphone with a 6.8-inch QHD+ Dynamic AMOLED display, Snapdragon 8 Elite chip, 200MP camera with AI-enhanced photography, built-in S Pen, and titanium frame.",
     category: "smartphones",
     skuBase: "GS25U",
@@ -232,6 +269,7 @@ const SMARTPHONES = [
   {
     title: "Samsung Galaxy S25",
     handle: "galaxy-s25",
+    brand: "Samsung",
     description: "A premium flagship experience in a compact form. 6.2-inch FHD+ Dynamic AMOLED display, Snapdragon 8 Elite, 50MP triple camera system, and 4000mAh battery with fast charging.",
     category: "smartphones",
     skuBase: "GS25",
@@ -255,6 +293,7 @@ const SMARTPHONES = [
   {
     title: "Google Pixel 9 Pro",
     handle: "pixel-9-pro",
+    brand: "Google",
     description: "Google's smartest phone yet with the Tensor G4 chip, 50MP triple camera with AI-powered Magic Eraser and Best Take, 6.3-inch Super Actua display, and 7 years of OS updates.",
     category: "smartphones",
     skuBase: "PX9P",
@@ -278,6 +317,7 @@ const SMARTPHONES = [
   {
     title: "OnePlus 13",
     handle: "oneplus-13",
+    brand: "OnePlus",
     description: "Flagship killer reborn. Snapdragon 8 Elite, 6.82-inch 2K LTPO AMOLED with 120Hz, Hasselblad-tuned 50MP triple camera, 6000mAh battery with 100W SUPERVOOC charging, and OxygenOS 15.",
     category: "smartphones",
     skuBase: "OP13",
@@ -301,6 +341,7 @@ const SMARTPHONES = [
   {
     title: "Xiaomi 15 Pro",
     handle: "xiaomi-15-pro",
+    brand: "Xiaomi",
     description: "Premium performance meets Leica optics. Snapdragon 8 Elite, 6.73-inch 2K AMOLED with 120Hz, Leica Summilux 50MP triple camera, 5400mAh battery with 120W HyperCharge, and HyperOS 2.",
     category: "smartphones",
     skuBase: "XI15P",
@@ -324,6 +365,7 @@ const SMARTPHONES = [
   {
     title: "Nothing Phone 3",
     handle: "nothing-phone-3",
+    brand: "Nothing",
     description: "Transparent design meets flagship specs. Unique Glyph Interface LED system, Snapdragon 7+ Gen 3, 6.55-inch OLED 120Hz display, 50MP dual camera, and Nothing OS 3.",
     category: "smartphones",
     skuBase: "NP3",
@@ -350,6 +392,7 @@ const LAPTOPS = [
   {
     title: 'MacBook Pro 16" M4',
     handle: "macbook-pro-16-m4",
+    brand: "Apple",
     description: "The most powerful MacBook Pro ever. M4 Pro or M4 Max chip, 16.2-inch Liquid Retina XDR display, up to 48GB unified memory, Thunderbolt 5, and up to 24 hours of battery life. Built for pros.",
     category: "laptops",
     skuBase: "MBP16M4",
@@ -373,6 +416,7 @@ const LAPTOPS = [
   {
     title: 'MacBook Air 15" M3',
     handle: "macbook-air-15-m3",
+    brand: "Apple",
     description: "Impossibly thin, incredibly capable. M3 chip, 15.3-inch Liquid Retina display, 18 hours of battery, MagSafe charging, and fanless silent operation. Just 11.5mm thin.",
     category: "laptops",
     skuBase: "MBA15M3",
@@ -396,6 +440,7 @@ const LAPTOPS = [
   {
     title: "Dell XPS 15",
     handle: "dell-xps-15",
+    brand: "Dell",
     description: "Stunning 15.6-inch 3.5K OLED InfinityEdge display, Intel Core Ultra 7 processor, NVIDIA GeForce RTX 4060, up to 32GB DDR5 RAM, and premium CNC-machined aluminum chassis.",
     category: "laptops",
     skuBase: "XPS15",
@@ -416,6 +461,7 @@ const LAPTOPS = [
   {
     title: "ThinkPad X1 Carbon Gen 12",
     handle: "thinkpad-x1-carbon-gen12",
+    brand: "Lenovo",
     description: "The legendary business ultrabook. Intel Core Ultra 7, 14-inch 2.8K OLED display, legendary keyboard, fingerprint reader, IR camera for Windows Hello, and MIL-STD-810H durability.",
     category: "laptops",
     skuBase: "X1C12",
@@ -436,6 +482,7 @@ const LAPTOPS = [
   {
     title: "ASUS ROG Strix G16",
     handle: "asus-rog-strix-g16",
+    brand: "ASUS",
     description: "Dominate every game. Intel Core i9-14900HX, NVIDIA GeForce RTX 4070, 16-inch QHD+ 240Hz display, 32GB DDR5, per-key RGB keyboard, and advanced thermal system with liquid metal cooling.",
     category: "laptops",
     skuBase: "ROGG16",
@@ -456,6 +503,7 @@ const LAPTOPS = [
   {
     title: "HP Spectre x360 16",
     handle: "hp-spectre-x360-16",
+    brand: "HP",
     description: "Elegant 2-in-1 convertible. Intel Core Ultra 7, 16-inch 3K OLED touchscreen with stylus support, quad speakers by Bang & Olufsen, and gem-cut design in Nightfall Black.",
     category: "laptops",
     skuBase: "SPEC360",
@@ -476,6 +524,7 @@ const LAPTOPS = [
   {
     title: "Surface Laptop 6",
     handle: "surface-laptop-6",
+    brand: "Microsoft",
     description: "Beautiful and productive. Intel Core Ultra 7, 15-inch PixelSense touchscreen, Copilot+ AI features, up to 20 hours battery, and Windows 11 with Copilot integration.",
     category: "laptops",
     skuBase: "SL6",
@@ -499,6 +548,7 @@ const LAPTOPS = [
   {
     title: "Acer Swift Go 14",
     handle: "acer-swift-go-14",
+    brand: "Acer",
     description: "Portable productivity champion. Intel Core Ultra 5, 14-inch 2.8K OLED display, 16GB LPDDR5x, weighs just 1.3kg, Wi-Fi 7, and up to 13 hours of battery life. Outstanding value.",
     category: "laptops",
     skuBase: "SWGO14",
@@ -521,6 +571,7 @@ const CAMERAS = [
   {
     title: "Sony A7 IV",
     handle: "sony-a7-iv",
+    brand: "Sony",
     description: "The do-everything full-frame mirrorless camera. 33MP Exmor R sensor, BIONZ XR processor, 4K 60p video, Real-time Eye AF for humans and animals, 10fps burst, and 5-axis IBIS.",
     category: "cameras",
     skuBase: "A7IV",
@@ -541,6 +592,7 @@ const CAMERAS = [
   {
     title: "Canon EOS R6 Mark II",
     handle: "canon-eos-r6-ii",
+    brand: "Canon",
     description: "Speed meets versatility. 24.2MP full-frame CMOS sensor, DIGIC X processor, 4K 60p oversampled video, up to 40fps electronic shutter, and in-body stabilization up to 8 stops.",
     category: "cameras",
     skuBase: "R6II",
@@ -561,6 +613,7 @@ const CAMERAS = [
   {
     title: "Nikon Z6 III",
     handle: "nikon-z6-iii",
+    brand: "Nikon",
     description: "Next-generation hybrid performance. 24.5MP stacked CMOS sensor, 4K 120p internal recording, 3D tracking AF, and dual card slots (CFexpress + SD).",
     category: "cameras",
     skuBase: "Z6III",
@@ -581,6 +634,7 @@ const CAMERAS = [
   {
     title: "Fujifilm X-T5",
     handle: "fujifilm-x-t5",
+    brand: "Fujifilm",
     description: "Retro design, modern performance. 40.2MP X-Trans CMOS 5 HR sensor, classic film simulations, 6.2K video, 15fps mechanical shutter, and weather-sealed magnesium alloy body.",
     category: "cameras",
     skuBase: "XT5",
@@ -604,6 +658,7 @@ const CAMERAS = [
   {
     title: "GoPro Hero 13 Black",
     handle: "gopro-hero-13",
+    brand: "GoPro",
     description: "The ultimate action camera. 27MP sensor, 5.3K 60fps video, HyperSmooth 7.0 stabilization, 10m waterproof without housing, GPS, and modular lens system.",
     category: "cameras",
     skuBase: "HERO13",
@@ -624,6 +679,7 @@ const CAMERAS = [
   {
     title: "DJI Osmo Action 5 Pro",
     handle: "dji-osmo-action-5-pro",
+    brand: "DJI",
     description: "Adventure-ready action camera. 1/1.3-inch sensor, 4K 120fps, RockSteady 4.0 + HorizonBalancing, 20m waterproof, dual touchscreens, and -20°C cold resistant.",
     category: "cameras",
     skuBase: "OA5P",
@@ -644,6 +700,7 @@ const CAMERAS = [
   {
     title: "Sony ZV-E10 II",
     handle: "sony-zv-e10-ii",
+    brand: "Sony",
     description: "The content creator's mirrorless camera. 26MP APS-C sensor, 4K 60p with no crop, cinematic vlog settings, product showcase mode, and AI-powered autofocus.",
     category: "cameras",
     skuBase: "ZVE10II",
@@ -667,6 +724,7 @@ const CAMERAS = [
   {
     title: "Canon PowerShot V10",
     handle: "canon-powershot-v10",
+    brand: "Canon",
     description: "Pocket vlogging camera. 1-inch CMOS sensor, 4K video, built-in wide-angle lens, flip-up screen, built-in stand, stereo microphone, and USB-C streaming.",
     category: "cameras",
     skuBase: "PSV10",
@@ -689,6 +747,7 @@ const AUDIO = [
   {
     title: "AirPods Pro 3",
     handle: "airpods-pro-3",
+    brand: "Apple",
     description: "Intelligent noise cancellation redefined. H3 chip, adaptive audio with conversation awareness, personalized spatial audio, IP54 dust and water resistance, and USB-C MagSafe case.",
     category: "audio",
     skuBase: "APP3",
@@ -709,6 +768,7 @@ const AUDIO = [
   {
     title: "Sony WH-1000XM6",
     handle: "sony-wh-1000xm6",
+    brand: "Sony",
     description: "Industry-leading noise cancellation. V2 integrated processor, 40mm carbon fiber drivers, 30-hour battery, multipoint Bluetooth 5.3, speak-to-chat, and LDAC Hi-Res Audio at just 227g.",
     category: "audio",
     skuBase: "XM6",
@@ -729,6 +789,7 @@ const AUDIO = [
   {
     title: "Bose QuietComfort Ultra Headphones",
     handle: "bose-qc-ultra",
+    brand: "Bose",
     description: "Immersive sound meets world-class noise cancellation. CustomTune technology, Bose Immersive Audio with head tracking, up to 24 hours battery, and luxurious protein leather cushions.",
     category: "audio",
     skuBase: "BQCU",
@@ -749,6 +810,7 @@ const AUDIO = [
   {
     title: "Samsung Galaxy Buds 3 Pro",
     handle: "galaxy-buds-3-pro",
+    brand: "Samsung",
     description: "Intelligent ANC with blade-style design. Dual drivers with planar tweeter, AI-powered adaptive noise control, 360 Audio with head tracking, and IP57 rating.",
     category: "audio",
     skuBase: "GB3P",
@@ -769,6 +831,7 @@ const AUDIO = [
   {
     title: "JBL Charge 6",
     handle: "jbl-charge-6",
+    brand: "JBL",
     description: "The ultimate portable Bluetooth speaker. Dual passive radiators for deep bass, IP67 waterproof and dustproof, 24-hour playtime, built-in powerbank, and PartyBoost for linking speakers.",
     category: "audio",
     skuBase: "JBLC6",
@@ -789,6 +852,7 @@ const AUDIO = [
   {
     title: "Sonos Era 300",
     handle: "sonos-era-300",
+    brand: "Sonos",
     description: "Spatial audio for the home. Six precisely-angled drivers for true Dolby Atmos, Wi-Fi 6 and Bluetooth, AirPlay 2, and Trueplay tuning that adapts to your room.",
     category: "audio",
     skuBase: "ERA300",
@@ -809,6 +873,7 @@ const AUDIO = [
   {
     title: "Sennheiser Momentum 4 Wireless",
     handle: "sennheiser-momentum-4",
+    brand: "Sennheiser",
     description: "Audiophile-grade wireless headphones. 42mm transducers with exceptional detail, adaptive noise cancellation, 60-hour battery life, and premium leather and metal build.",
     category: "audio",
     skuBase: "MTM4",
@@ -829,6 +894,7 @@ const AUDIO = [
   {
     title: "Marshall Emberton III",
     handle: "marshall-emberton-iii",
+    brand: "Marshall",
     description: "Iconic rock-and-roll sound, portable. True 360 sound with dual passive radiators, IP67, 32 hours of playtime, Stack Mode, and classic Marshall design.",
     category: "audio",
     skuBase: "MEMB3",
@@ -849,6 +915,7 @@ const AUDIO = [
   {
     title: "Apple AirPods Max",
     handle: "airpods-max",
+    brand: "Apple",
     description: "High-fidelity over-ear headphones. H2 chip, adaptive EQ, active noise cancellation, personalized spatial audio with dynamic head tracking, Digital Crown control, and anodized aluminum build.",
     category: "audio",
     skuBase: "APM",
@@ -871,6 +938,7 @@ const WEARABLES = [
   {
     title: "Apple Watch Ultra 3",
     handle: "apple-watch-ultra-3",
+    brand: "Apple",
     description: "Built for extreme adventure. 49mm titanium case, always-on Retina display at 3000 nits, S10 chip, precision dual-frequency GPS, depth gauge to 40m, 86dB siren, and up to 72 hours battery.",
     category: "wearables",
     skuBase: "AWU3",
@@ -891,6 +959,7 @@ const WEARABLES = [
   {
     title: "Samsung Galaxy Watch 7",
     handle: "galaxy-watch-7",
+    brand: "Samsung",
     description: "Smart health companion. Exynos W1000 3nm chip, sapphire crystal display, advanced BioActive sensor, Wear OS 5 with Galaxy AI, and IP68 + 5ATM water resistance.",
     category: "wearables",
     skuBase: "GW7",
@@ -914,6 +983,7 @@ const WEARABLES = [
   {
     title: "Garmin Fenix 8",
     handle: "garmin-fenix-8",
+    brand: "Garmin",
     description: "The ultimate multisport GPS watch. AMOLED display, solar charging, multi-band GNSS with SatIQ, built-in flashlight, dive-ready to 40m, topo maps, and up to 48 days battery.",
     category: "wearables",
     skuBase: "FNX8",
@@ -934,6 +1004,7 @@ const WEARABLES = [
   {
     title: "Google Pixel Watch 3",
     handle: "pixel-watch-3",
+    brand: "Google",
     description: "Beautifully smart. Circular domed AMOLED display, Fitbit health tracking, fall and crash detection, Emergency SOS, and deep Google Assistant and Gemini AI integration.",
     category: "wearables",
     skuBase: "PW3",
@@ -957,6 +1028,7 @@ const WEARABLES = [
   {
     title: "Fitbit Charge 6",
     handle: "fitbit-charge-6",
+    brand: "Fitbit",
     description: "Advanced health and fitness tracker. Built-in GPS, continuous heart rate and stress monitoring, ECG app, SpO2, skin temperature sensing, 40+ exercise modes, and 7-day battery.",
     category: "wearables",
     skuBase: "FC6",
@@ -977,6 +1049,7 @@ const WEARABLES = [
   {
     title: "Oura Ring 4",
     handle: "oura-ring-4",
+    brand: "Oura",
     description: "Health tracking reimagined. Titanium smart ring with research-grade sensors for sleep stages, heart rate variability, blood oxygen, body temperature, and stress. No screen, no distractions.",
     category: "wearables",
     skuBase: "OURA4",
@@ -997,6 +1070,7 @@ const WEARABLES = [
   {
     title: "Apple Watch SE (3rd Gen)",
     handle: "apple-watch-se-3",
+    brand: "Apple",
     description: "Essential Apple Watch features at an accessible price. S9 chip, crash and fall detection, heart rate notifications, Emergency SOS, sleep tracking, and seamless iPhone integration.",
     category: "wearables",
     skuBase: "AWSE3",
@@ -1020,6 +1094,7 @@ const WEARABLES = [
   {
     title: "Garmin Venu 3",
     handle: "garmin-venu-3",
+    brand: "Garmin",
     description: "Smartwatch meets fitness coach. Bright AMOLED display, body battery energy monitoring, sleep coach with nap detection, built-in speaker and mic for calls, and up to 14 days battery.",
     category: "wearables",
     skuBase: "VENU3",
@@ -1045,6 +1120,7 @@ const ACCESSORIES = [
   {
     title: "Samsung T9 Portable SSD 2TB",
     handle: "samsung-t9-ssd-2tb",
+    brand: "Samsung",
     description: "Blazing fast portable storage. Up to 2,000 MB/s read/write with USB 3.2 Gen 2x2, shock-resistant rubber exterior with IP65, hardware encryption, and compact pocket-sized design.",
     category: "accessories",
     skuBase: "T9SSD",
@@ -1065,6 +1141,7 @@ const ACCESSORIES = [
   {
     title: "SanDisk Ultra USB-C Flash Drive 256GB",
     handle: "sandisk-ultra-usbc-256gb",
+    brand: "SanDisk",
     description: "High-speed USB-C storage. Up to 400 MB/s read speeds, USB 3.2 Gen 1, slim retractable design with keyring hole, and password protection with 128-bit AES encryption.",
     category: "accessories",
     skuBase: "SDULTRA",
@@ -1085,6 +1162,7 @@ const ACCESSORIES = [
   {
     title: "Anker 65W GaN Charger",
     handle: "anker-65w-gan-charger",
+    brand: "Anker",
     description: "Compact powerhouse. GaN III technology for 65W in a tiny form factor, 2x USB-C + 1x USB-A ports, PowerIQ 4.0, foldable plug, and compatible with laptops, phones, and tablets.",
     category: "accessories",
     skuBase: "ANK65W",
@@ -1105,6 +1183,7 @@ const ACCESSORIES = [
   {
     title: "Apple MagSafe Charger",
     handle: "apple-magsafe-charger",
+    brand: "Apple",
     description: "Perfect magnetic alignment for effortless wireless charging. Up to 25W fast charging for iPhone 16 series, Qi2 compatible, integrated USB-C cable, and works through lightweight cases.",
     category: "accessories",
     skuBase: "MAGSAFE",
@@ -1125,6 +1204,7 @@ const ACCESSORIES = [
   {
     title: "Logitech MX Master 3S",
     handle: "logitech-mx-master-3s",
+    brand: "Logitech",
     description: "The productivity mouse. 8K DPI tracking on any surface including glass, quiet clicks, MagSpeed electromagnetic scroll wheel, ergonomic design, USB-C quick charge, and Flow cross-computer control.",
     category: "accessories",
     skuBase: "MXM3S",
@@ -1145,6 +1225,7 @@ const ACCESSORIES = [
   {
     title: "Razer DeathAdder V3",
     handle: "razer-deathadder-v3",
+    brand: "Razer",
     description: "Esports-grade gaming mouse. Focus Pro 30K optical sensor, 90-hour battery, HyperSpeed wireless with <1ms latency, ultra-lightweight 63g, Gen-3 optical switches, and ergonomic shape refined over 15 years.",
     category: "accessories",
     skuBase: "DAV3",
@@ -1165,6 +1246,7 @@ const ACCESSORIES = [
   {
     title: "Apple Magic Keyboard with Touch ID",
     handle: "apple-magic-keyboard",
+    brand: "Apple",
     description: "Wireless keyboard perfection. Touch ID for secure authentication and Apple Pay, low-profile scissor mechanism, full-size layout with numeric keypad, USB-C charging, and seamless Mac integration.",
     category: "accessories",
     skuBase: "MAGKB",
@@ -1185,6 +1267,7 @@ const ACCESSORIES = [
   {
     title: "USB-C Hub 7-in-1",
     handle: "usb-c-hub-7-in-1",
+    brand: "Generic",
     description: "Expand your connectivity. 4K HDMI output, 100W USB-C PD passthrough, 2x USB-A 3.0, SD and microSD card readers, and compact aluminum design. Compatible with MacBook, iPad Pro, and USB-C laptops.",
     category: "accessories",
     skuBase: "HUB7",
@@ -1205,6 +1288,7 @@ const ACCESSORIES = [
   {
     title: "Belkin BoostCharge Pro 3-in-1",
     handle: "belkin-boostcharge-pro",
+    brand: "Belkin",
     description: "All-in-one charging station. Official MFi MagSafe charger for iPhone (up to 15W), Apple Watch fast charging pad, and AirPods Qi2 charging spot. Sleek design with non-slip base and LED indicator.",
     category: "accessories",
     skuBase: "BELKIN3",
@@ -1243,8 +1327,14 @@ async function main() {
   console.log("\n📦 Deleting existing products...");
   await deleteAllProducts();
 
+  console.log("\n🏷️  Deleting existing tags...");
+  await deleteAllTags();
+
+  console.log("\n🏷️  Creating brand tags...");
+  const tagMap = await createBrandTags(ALL_PRODUCTS);
+
   console.log(`\n🛒 Creating ${ALL_PRODUCTS.length} products...\n`);
-  const built = ALL_PRODUCTS.map((p) => buildProduct(p));
+  const built = ALL_PRODUCTS.map((p) => buildProduct(p, tagMap));
 
   const totalVariants = built.reduce((sum, p) => sum + p.variants.length, 0);
   console.log(`   (${totalVariants} total variants across all products)\n`);

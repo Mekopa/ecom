@@ -67,6 +67,14 @@ export default async function Footer() {
                   {t("allProducts")}
                 </LocalizedClientLink>
               </li>
+              <li>
+                <LocalizedClientLink
+                  href="/brands"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  {t("brands")}
+                </LocalizedClientLink>
+              </li>
             </ul>
           </div>
 

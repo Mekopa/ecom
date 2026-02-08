@@ -11,6 +11,8 @@
     "searchPlaceholder": "Produkte suchen...",
     "noResults": "Keine Produkte gefunden",
     "searchResults": "Suchergebnisse",
+    "brands": "Marken",
+    "viewBrand": "Marke ansehen",
     "notifications": "Benachrichtigungen"
   },
   "home": {
@@ -284,7 +286,13 @@
     "sortBy": "Sortieren nach",
     "latestArrivals": "Neueste Produkte",
     "priceLowHigh": "Preis: Niedrig → Hoch",
-    "priceHighLow": "Preis: Hoch → Niedrig"
+    "priceHighLow": "Preis: Hoch → Niedrig",
+    "filterAndSort": "Filtern & Sortieren",
+    "filterByBrand": "Marke"
+  },
+  "brands": {
+    "title": "Marken",
+    "subtitle": "Alle Marken durchsuchen"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "E-Mail-Adresse eingeben",
     "subscribe": "Abonnieren",
     "rights": "Alle Rechte vorbehalten.",
-    "allProducts": "Alle Produkte"
+    "allProducts": "Alle Produkte",
+    "brands": "Marken"
   }
 }

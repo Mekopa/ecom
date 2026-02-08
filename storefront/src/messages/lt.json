@@ -11,6 +11,8 @@
     "searchPlaceholder": "Ieškoti produktų...",
     "noResults": "Produktų nerasta",
     "searchResults": "Paieškos rezultatai",
+    "brands": "Prekių ženklai",
+    "viewBrand": "Žiūrėti prekės ženklą",
     "notifications": "Pranešimai"
   },
   "home": {
@@ -284,7 +286,13 @@
     "sortBy": "Rūšiuoti pagal",
     "latestArrivals": "Naujausi",
     "priceLowHigh": "Kaina: nuo mažiausios",
-    "priceHighLow": "Kaina: nuo didžiausios"
+    "priceHighLow": "Kaina: nuo didžiausios",
+    "filterAndSort": "Filtruoti ir rūšiuoti",
+    "filterByBrand": "Prekės ženklas"
+  },
+  "brands": {
+    "title": "Prekių ženklai",
+    "subtitle": "Naršykite visus prekių ženklus"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "Įveskite savo el. paštą",
     "subscribe": "Prenumeruoti",
     "rights": "Visos teisės saugomos.",
-    "allProducts": "Visi produktai"
+    "allProducts": "Visi produktai",
+    "brands": "Prekių ženklai"
   }
 }

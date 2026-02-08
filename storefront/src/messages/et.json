@@ -11,6 +11,8 @@
     "searchPlaceholder": "Otsi tooteid...",
     "noResults": "Tooteid ei leitud",
     "searchResults": "Otsingutulemused",
+    "brands": "Brändid",
+    "viewBrand": "Vaata brändi",
     "notifications": "Teavitused"
   },
   "home": {
@@ -284,7 +286,13 @@
     "sortBy": "Sorteeri",
     "latestArrivals": "Uusimad",
     "priceLowHigh": "Hind: odavamad enne",
-    "priceHighLow": "Hind: kallimad enne"
+    "priceHighLow": "Hind: kallimad enne",
+    "filterAndSort": "Filtreeri ja sorteeri",
+    "filterByBrand": "Bränd"
+  },
+  "brands": {
+    "title": "Brändid",
+    "subtitle": "Sirvi kõiki brände"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "Sisesta oma e-post",
     "subscribe": "Telli",
     "rights": "Kõik õigused kaitstud.",
-    "allProducts": "Kõik tooted"
+    "allProducts": "Kõik tooted",
+    "brands": "Brändid"
   }
 }

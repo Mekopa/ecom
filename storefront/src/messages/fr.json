@@ -11,6 +11,8 @@
     "searchPlaceholder": "Rechercher des produits...",
     "noResults": "Aucun produit trouvé",
     "searchResults": "Résultats de recherche",
+    "brands": "Marques",
+    "viewBrand": "Voir la marque",
     "notifications": "Notifications"
   },
   "home": {
@@ -279,12 +281,18 @@
     "Polished Silver": "Argent poli",
     "Midnight Blue": "Bleu nuit"
   },
+  "brands": {
+    "title": "Marques",
+    "subtitle": "Parcourir toutes les marques"
+  },
   "store": {
     "allProducts": "Tous les produits",
     "sortBy": "Trier par",
     "latestArrivals": "Dernières nouveautés",
     "priceLowHigh": "Prix : Croissant",
-    "priceHighLow": "Prix : Décroissant"
+    "priceHighLow": "Prix : Décroissant",
+    "filterAndSort": "Filtrer et trier",
+    "filterByBrand": "Marque"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "Entrez votre e-mail",
     "subscribe": "S'abonner",
     "rights": "Tous droits réservés.",
-    "allProducts": "Tous les produits"
+    "allProducts": "Tous les produits",
+    "brands": "Marques"
   }
 }

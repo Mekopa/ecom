@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl"
 import Image from "next/image"
 
 import { searchProducts } from "@lib/data/products"
+import { searchBrandTags } from "@lib/data/tags"
+import { getBrandDisplayName, getBrandSlug, BrandTag } from "@lib/util/brand-helpers"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import Search from "@modules/common/icons/search"
@@ -27,6 +29,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<HttpTypes.StoreProduct[]>([])
+  const [brandResults, setBrandResults] = useState<BrandTag[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
 
@@ -57,20 +60,23 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     async (searchQuery: string) => {
       if (!searchQuery.trim()) {
         setResults([])
+        setBrandResults([])
         setHasSearched(false)
         return
       }
 
       setIsLoading(true)
       try {
-        const { products } = await searchProducts({
-          query: searchQuery,
-          countryCode,
-        })
+        const [{ products }, brands] = await Promise.all([
+          searchProducts({ query: searchQuery, countryCode }),
+          searchBrandTags(searchQuery),
+        ])
         setResults(products)
+        setBrandResults(brands)
         setHasSearched(true)
       } catch {
         setResults([])
+        setBrandResults([])
         setHasSearched(true)
       } finally {
         setIsLoading(false)
@@ -87,13 +93,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     }, 300)
   }
 
-  const handleNavigate = (handle: string) => {
+  const handleNavigate = (path: string) => {
     handleClose()
     setTimeout(() => {
       setQuery("")
       setResults([])
+      setBrandResults([])
       setHasSearched(false)
-      router.push(`/${countryCode}/products/${handle}`)
+      router.push(`/${countryCode}${path}`)
     }, ANIMATION_DURATION)
   }
 
@@ -102,6 +109,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     if (!isVisible) {
       setQuery("")
       setResults([])
+      setBrandResults([])
       setHasSearched(false)
     } else {
       setTimeout(() => inputRef.current?.focus(), 100)
@@ -145,6 +153,8 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   }, [isVisible])
 
   if (!isVisible) return null
+
+  const hasResults = results.length > 0 || brandResults.length > 0
 
   return (
     <div className="fixed inset-0 z-[60]">
@@ -221,7 +231,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                 )}
 
                 {/* No results */}
-                {hasSearched && results.length === 0 && !isLoading && (
+                {hasSearched && !hasResults && !isLoading && (
                   <div className="flex flex-col items-center justify-center py-16 text-gray-400">
                     <div className="w-12 h-12 rounded-2xl bg-gray-100/80 dark:bg-white/10 flex items-center justify-center mb-4">
                       <Search size="20" className="opacity-60" />
@@ -230,7 +240,43 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                   </div>
                 )}
 
-                {/* Result list */}
+                {/* Brand results */}
+                {brandResults.length > 0 && (
+                  <div className="py-2">
+                    <p className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                      {t("brands")}
+                    </p>
+                    <ul>
+                      {brandResults.map((brand) => (
+                        <li key={brand.id}>
+                          <button
+                            onClick={() =>
+                              handleNavigate(`/brands/${getBrandSlug(brand)}`)
+                            }
+                            className="group w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors text-left"
+                          >
+                            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0 ring-1 ring-black/5 dark:ring-white/10 flex items-center justify-center">
+                              <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
+                                {getBrandDisplayName(brand).charAt(0)}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                {getBrandDisplayName(brand)}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {t("viewBrand")}
+                              </p>
+                            </div>
+                            <ArrowRightMini className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Product results */}
                 {results.length > 0 && (
                   <div className="py-2">
                     <p className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -246,7 +292,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                           <li key={product.id}>
                             <button
                               onClick={() =>
-                                handleNavigate(product.handle!)
+                                handleNavigate(`/products/${product.handle!}`)
                               }
                               className="group w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors text-left"
                             >

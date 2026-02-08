@@ -11,6 +11,8 @@
     "searchPlaceholder": "Meklēt produktus...",
     "noResults": "Produkti nav atrasti",
     "searchResults": "Meklēšanas rezultāti",
+    "brands": "Zīmoli",
+    "viewBrand": "Skatīt zīmolu",
     "notifications": "Paziņojumi"
   },
   "home": {
@@ -284,7 +286,13 @@
     "sortBy": "Kārtot pēc",
     "latestArrivals": "Jaunākās preces",
     "priceLowHigh": "Cena: no zemākās",
-    "priceHighLow": "Cena: no augstākās"
+    "priceHighLow": "Cena: no augstākās",
+    "filterAndSort": "Filtrēt un kārtot",
+    "filterByBrand": "Zīmols"
+  },
+  "brands": {
+    "title": "Zīmoli",
+    "subtitle": "Pārlūkot visus zīmolus"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "Ievadiet savu e-pastu",
     "subscribe": "Abonēt",
     "rights": "Visas tiesības aizsargātas.",
-    "allProducts": "Visi produkti"
+    "allProducts": "Visi produkti",
+    "brands": "Zīmoli"
   }
 }

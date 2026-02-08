@@ -11,6 +11,8 @@
     "searchPlaceholder": "Ürün ara...",
     "noResults": "Ürün bulunamadı",
     "searchResults": "Arama Sonuçları",
+    "brands": "Markalar",
+    "viewBrand": "Markayı görüntüle",
     "notifications": "Bildirimler"
   },
   "home": {
@@ -279,12 +281,18 @@
     "Polished Silver": "Parlak Gümüş",
     "Midnight Blue": "Gece Mavisi"
   },
+  "brands": {
+    "title": "Markalar",
+    "subtitle": "Tüm markalara göz atın"
+  },
   "store": {
     "allProducts": "Tüm ürünler",
     "sortBy": "Sırala",
     "latestArrivals": "En Yeniler",
     "priceLowHigh": "Fiyat: Düşükten Yükseğe",
-    "priceHighLow": "Fiyat: Yüksekten Düşüğe"
+    "priceHighLow": "Fiyat: Yüksekten Düşüğe",
+    "filterAndSort": "Filtrele ve Sırala",
+    "filterByBrand": "Marka"
   },
   "footer": {
     "brand": "Electro Store",
@@ -300,6 +308,7 @@
     "emailPlaceholder": "E-posta adresinizi girin",
     "subscribe": "Abone Ol",
     "rights": "Tüm hakları saklıdır.",
-    "allProducts": "Tüm Ürünler"
+    "allProducts": "Tüm Ürünler",
+    "brands": "Markalar"
   }
 }
