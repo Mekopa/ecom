@@ -33,6 +33,12 @@ const Hero = async () => {
       noResultsText={t("noResults")}
       viewAllText={t("viewAll")}
       categories={topCategories}
+      trustBadges={[
+        t("freeShipping"),
+        t("returns"),
+        t("trustWarranty"),
+        t("secureCheckout"),
+      ]}
     />
   )
 }

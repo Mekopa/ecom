@@ -13,6 +13,26 @@ const ROTATE_INTERVAL = 3000
 
 type CategoryData = { id: string; handle: string; name: string }
 
+/* Trust badge icons — order must match the labels array from server */
+const TRUST_ICONS = [
+  // Free Shipping (truck)
+  <svg key="truck" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+  </svg>,
+  // 30-Day Returns (refresh)
+  <svg key="returns" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+  </svg>,
+  // 12-Month Warranty (shield)
+  <svg key="shield" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+  </svg>,
+  // Secure Checkout (lock)
+  <svg key="lock" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+  </svg>,
+]
+
 export default function HeroInteractive({
   title,
   subtitle,
@@ -20,6 +40,7 @@ export default function HeroInteractive({
   noResultsText,
   viewAllText,
   categories,
+  trustBadges,
 }: {
   title: string
   subtitle: string
@@ -27,6 +48,7 @@ export default function HeroInteractive({
   noResultsText: string
   viewAllText: string
   categories: CategoryData[]
+  trustBadges: string[]
 }) {
   const { countryCode } = useParams<{ countryCode: string }>()
   const router = useRouter()
@@ -120,7 +142,7 @@ export default function HeroInteractive({
   const showDropdown = isFocused && (hasSearched || isLoading)
 
   return (
-    <div className="relative">
+    <div className="relative bg-[var(--bg-primary)]">
       {/* Hero section with curved bottom */}
       <div className="relative overflow-hidden rounded-b-[2.5rem] small:rounded-b-[3.5rem]">
         {/* Gradient background */}
@@ -176,11 +198,12 @@ export default function HeroInteractive({
         </div>
       </div>
 
-      {/* Search bar — overlaps the curved bottom edge */}
+      {/* Unified search + trust card — bridges the curved bottom edge */}
       <div className="relative z-20 -mt-8 small:-mt-10 px-5" ref={dropdownRef}>
-        <div className="max-w-2xl mx-auto">
+        <div className={`max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl shadow-gray-900/10 dark:shadow-black/30 overflow-hidden transition-all duration-300 ${isFocused ? "shadow-2xl shadow-blue-500/10 dark:shadow-blue-500/10 ring-2 ring-blue-500/30" : ""}`}>
+          {/* Search input */}
           <form onSubmit={handleSubmit}>
-            <div className={`relative flex items-center transition-all duration-300 ${isFocused ? "scale-[1.02]" : ""}`}>
+            <div className={`relative flex items-center transition-all duration-300 ${isFocused ? "scale-[1.0]" : ""}`}>
               {/* Search icon */}
               <svg
                 className="absolute left-5 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none z-10"
@@ -200,11 +223,7 @@ export default function HeroInteractive({
                 onChange={(e) => handleInputChange(e.target.value)}
                 onFocus={() => setIsFocused(true)}
                 placeholder={placeholders[placeholderIndex]}
-                className={`w-full pl-14 pr-14 py-4 small:py-5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base small:text-lg outline-none transition-all duration-300 shadow-xl shadow-gray-900/10 dark:shadow-black/30 ${
-                  isFocused
-                    ? "rounded-t-2xl rounded-b-none ring-2 ring-blue-500/30 shadow-2xl shadow-blue-500/10 dark:shadow-blue-500/10"
-                    : "rounded-2xl"
-                } ${showDropdown && results.length > 0 ? "rounded-b-none" : ""}`}
+                className="w-full pl-14 pr-14 py-4 small:py-5 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base small:text-lg outline-none"
               />
 
               {/* Loading spinner / submit button */}
@@ -228,9 +247,9 @@ export default function HeroInteractive({
             </div>
           </form>
 
-          {/* Results dropdown — flows naturally from search bar */}
+          {/* Search results dropdown — replaces trust badges when active */}
           {showDropdown && (
-            <div className="bg-white dark:bg-gray-900 rounded-b-2xl shadow-xl shadow-gray-900/10 dark:shadow-black/30 overflow-hidden border-t border-gray-100 dark:border-gray-800 ring-2 ring-blue-500/30 ring-t-0">
+            <div className="border-t border-gray-100 dark:border-gray-800">
               {hasSearched && results.length === 0 && !isLoading && (
                 <div className="px-5 py-8 text-center text-gray-400 text-sm">
                   {noResultsText}
@@ -289,6 +308,25 @@ export default function HeroInteractive({
                   </button>
                 </>
               )}
+            </div>
+          )}
+
+          {/* Trust badges — resting state below search */}
+          {!showDropdown && (
+            <div className="border-t border-gray-100 dark:border-gray-800">
+              <div className="grid grid-cols-2 small:grid-cols-4 gap-x-4 gap-y-2 px-5 py-3">
+                {trustBadges.map((label, i) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                  >
+                    <span className="text-blue-600 dark:text-blue-400 flex-shrink-0">
+                      {TRUST_ICONS[i]}
+                    </span>
+                    <span className="text-xs font-medium truncate">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

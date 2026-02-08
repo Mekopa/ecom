@@ -3,7 +3,6 @@ import { STORE_NAME, STORE_DESCRIPTION } from "@lib/constants"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
-import TrustStrip from "@modules/home/components/trust-strip"
 import CategoryShowcase from "@modules/home/components/category-showcase"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
@@ -33,9 +32,8 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <TrustStrip />
       <CategoryShowcase />
-      <div className="py-12 bg-white dark:bg-gray-950">
+      <div className="py-12 bg-[var(--bg-primary)]">
         <ul className="flex flex-col gap-x-6">
           <FeaturedProducts collections={collections.slice(0, 2)} region={region} />
         </ul>
