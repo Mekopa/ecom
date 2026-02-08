@@ -38,17 +38,22 @@ export default function ProductActions({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [options, setOptions] = useState<Record<string, string | undefined>>({})
+  const [options, setOptions] = useState<Record<string, string | undefined>>(() => {
+    // Synchronous init: preselect all options for single variant,
+    // or just the first color for multi-variant products
+    if (product.variants?.length === 1) {
+      return optionsAsKeymap(product.variants[0].options) ?? {}
+    }
+    const colorOption = product.options?.find(
+      (o) => o.title?.toLowerCase() === "color"
+    )
+    if (colorOption?.values?.length) {
+      return { [colorOption.id]: colorOption.values[0].value }
+    }
+    return {}
+  })
   const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
-
-  // If there is only 1 variant, preselect the options
-  useEffect(() => {
-    if (product.variants?.length === 1) {
-      const variantOptions = optionsAsKeymap(product.variants[0].options)
-      setOptions(variantOptions ?? {})
-    }
-  }, [product.variants])
 
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) {
@@ -77,22 +82,34 @@ export default function ProductActions({
     })
   }, [product.variants, options])
 
+  // Sync selected options + variant ID to the URL so ImageGallery can filter
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString())
-    const value = isValidVariant ? selectedVariant?.id : null
+    const variantValue = isValidVariant ? selectedVariant?.id : null
 
-    if (params.get("v_id") === value) {
-      return
-    }
-
-    if (value) {
-      params.set("v_id", value)
+    // Write v_id for full variant match
+    if (variantValue) {
+      params.set("v_id", variantValue)
     } else {
       params.delete("v_id")
     }
 
+    // Write selected color option so the gallery can filter before full match
+    const colorOption = product.options?.find(
+      (o) => o.title?.toLowerCase() === "color"
+    )
+    if (colorOption && options[colorOption.id]) {
+      params.set("color", options[colorOption.id]!)
+    } else {
+      params.delete("color")
+    }
+
+    if (params.toString() === searchParams.toString()) {
+      return
+    }
+
     router.replace(pathname + "?" + params.toString())
-  }, [selectedVariant, isValidVariant])
+  }, [selectedVariant, isValidVariant, options, product.options])
 
   // check if the selected variant is in stock
   const inStock = useMemo(() => {

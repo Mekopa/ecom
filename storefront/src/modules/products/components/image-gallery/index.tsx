@@ -4,7 +4,7 @@ import { HttpTypes } from "@medusajs/types"
 import { Container, clx } from "@medusajs/ui"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import PlaceholderImage from "@modules/common/icons/placeholder-image"
 
@@ -19,36 +19,78 @@ type ImageGalleryProps = {
 const ImageGallery = ({ product }: ImageGalleryProps) => {
   const searchParams = useSearchParams()
   const selectedVariantId = searchParams.get("v_id")
+  const selectedColor = searchParams.get("color")
+
+  // Helper: collect image IDs for all variants matching a given color value
+  const getImagesForColor = useMemo(() => {
+    const allImages = product.images ?? []
+    const variants = (product.variants ?? []) as VariantWithImages[]
+    const colorOption = product.options?.find(
+      (o) => o.title?.toLowerCase() === "color"
+    )
+
+    return (color: string): typeof allImages | null => {
+      if (!colorOption || variants.length === 0) return null
+      const colorVariants = variants.filter((v) =>
+        v.options?.some(
+          (o) =>
+            (o as any).option_id === colorOption.id && o.value === color
+        )
+      )
+      const imageIds = new Set<string>()
+      for (const v of colorVariants) {
+        for (const img of v.images ?? []) {
+          imageIds.add(img.id)
+        }
+      }
+      if (imageIds.size === 0) return null
+      const matched = allImages.filter((i) => imageIds.has(i.id))
+      return matched.length > 0 ? matched : null
+    }
+  }, [product.images, product.variants, product.options])
 
   const filteredImages = useMemo(() => {
-    if (!selectedVariantId || !product.variants) {
-      return product.images ?? []
+    const allImages = product.images ?? []
+    const variants = (product.variants ?? []) as VariantWithImages[]
+
+    // If a specific variant is selected, use its images
+    if (selectedVariantId) {
+      const variant = variants.find((v) => v.id === selectedVariantId)
+      if (variant?.images?.length) {
+        const variantImageIds = new Set(variant.images.map((i) => i.id))
+        const matched = allImages.filter((i) => variantImageIds.has(i.id))
+        if (matched.length > 0) return matched
+      }
     }
 
-    const variant = (product.variants as VariantWithImages[]).find(
-      (v) => v.id === selectedVariantId
-    )
-    if (!variant || !variant.images?.length) {
-      return product.images ?? []
+    // Use the color from URL, or default to the first color value
+    const effectiveColor =
+      selectedColor ??
+      product.options
+        ?.find((o) => o.title?.toLowerCase() === "color")
+        ?.values?.[0]?.value ??
+      null
+
+    if (effectiveColor) {
+      const matched = getImagesForColor(effectiveColor)
+      if (matched) return matched
     }
 
-    const variantImageIds = new Set(variant.images.map((i) => i.id))
-    const matched = (product.images ?? []).filter((i) => variantImageIds.has(i.id))
-    return matched.length > 0 ? matched : product.images ?? []
-  }, [product.images, product.variants, selectedVariantId])
+    return allImages
+  }, [product.images, product.variants, selectedVariantId, selectedColor, getImagesForColor])
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const prevImagesRef = useRef(filteredImages)
 
-  // Reset to first image when filtered set changes
+  // Reset to first image only when the actual image set changes
   useEffect(() => {
-    setSelectedIndex(0)
-    setImageLoaded(false)
+    const prevIds = prevImagesRef.current.map((i) => i.id).join(",")
+    const nextIds = filteredImages.map((i) => i.id).join(",")
+    if (prevIds !== nextIds) {
+      setSelectedIndex(0)
+    }
+    prevImagesRef.current = filteredImages
   }, [filteredImages])
-
-  const handleImageLoad = useCallback(() => {
-    setImageLoaded(true)
-  }, [])
 
   if (filteredImages.length === 0) {
     return (
@@ -74,15 +116,11 @@ const ImageGallery = ({ product }: ImageGalleryProps) => {
               key={activeImage.url}
               src={activeImage.url}
               priority
-              className={clx(
-                "absolute inset-0 rounded-rounded animate-enter transition-opacity duration-300",
-                imageLoaded ? "opacity-100" : "opacity-0"
-              )}
+              className="absolute inset-0 rounded-rounded"
               alt={`Product image ${selectedIndex + 1}`}
               fill
               sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
               style={{ objectFit: "cover" }}
-              onLoad={handleImageLoad}
             />
           )}
         </Container>
@@ -93,10 +131,7 @@ const ImageGallery = ({ product }: ImageGalleryProps) => {
             {filteredImages.map((image, index) => (
               <button
                 key={image.id}
-                onClick={() => {
-                  setSelectedIndex(index)
-                  setImageLoaded(false)
-                }}
+                onClick={() => setSelectedIndex(index)}
                 className={clx(
                   "relative w-16 h-20 flex-shrink-0 overflow-hidden rounded-soft border-2 transition-colors",
                   index === selectedIndex
