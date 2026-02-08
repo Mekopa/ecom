@@ -146,7 +146,7 @@ export default function HeroInteractive({
   const showDropdown = isFocused && (hasSearched || isLoading)
 
   return (
-    <div className="relative bg-[var(--bg-primary)]">
+    <div className="relative bg-[var(--bg-primary)]" ref={dropdownRef}>
       {/* Hero section with curved bottom */}
       <div className="relative overflow-hidden rounded-b-[2.5rem] small:rounded-b-[3.5rem]">
         {/* Gradient background */}
@@ -181,14 +181,18 @@ export default function HeroInteractive({
             </p>
           </div>
 
-          {/* Subtitle + Browse button — smooth collapse on focus */}
-          <div className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${isFocused ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"}`}>
-            <div className="overflow-hidden min-h-0">
-              <p className="text-base small:text-lg text-blue-900/60 dark:text-blue-100/80 max-w-md font-light mt-4 text-center">
-                {subtitle}
-              </p>
+          {/* Swap zone — fixed height crossfade on desktop, fluid on mobile */}
+          <div className="relative w-full max-w-2xl mt-4">
+            {/* Subtitle + Browse button */}
+            <div className={`flex flex-col items-center transition-all duration-500 ease-in-out
+              grid small:block
+              ${isFocused ? "grid-rows-[0fr] small:grid-rows-[1fr] opacity-0 pointer-events-none" : "grid-rows-[1fr] opacity-100"}`}
+            >
+              <div className="overflow-hidden min-h-0 small:overflow-visible flex flex-col items-center">
+                <p className="text-base small:text-lg text-blue-900/60 dark:text-blue-100/80 max-w-md font-light text-center">
+                  {subtitle}
+                </p>
 
-              <div className="flex justify-center">
                 <button
                   onClick={() => {
                     inputRef.current?.focus()
@@ -203,27 +207,30 @@ export default function HeroInteractive({
                 </button>
               </div>
             </div>
-          </div>
 
-          {/* Category grid — smooth expand on focus */}
-          <div className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${isFocused ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 pointer-events-none"}`}>
-            <div className="overflow-hidden min-h-0">
-              <div className="grid grid-cols-3 small:grid-cols-6 gap-3 small:gap-4 w-full max-w-2xl mx-auto">
-                {categories.map((cat) => {
-                  const Icon = CategoryIcons[cat.handle] || CategoryIcons.accessories
-                  return (
-                    <LocalizedClientLink
-                      key={cat.id}
-                      href={`/categories/${cat.handle}`}
-                      className="flex flex-col items-center gap-2 py-3 small:py-4 px-2 rounded-2xl bg-white/60 dark:bg-white/10 border border-gray-200/40 dark:border-white/10 backdrop-blur-sm hover:bg-white hover:scale-105 dark:hover:bg-white/20 transition-all"
-                    >
-                      <Icon className="w-6 h-6 small:w-8 small:h-8 text-blue-600 dark:text-blue-400" />
-                      <span className="text-xs small:text-sm font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
-                        {cat.name}
-                      </span>
-                    </LocalizedClientLink>
-                  )
-                })}
+            {/* Category grid — overlays on desktop, expands on mobile */}
+            <div className={`transition-all duration-500 ease-in-out
+              grid small:absolute small:inset-x-0 small:top-0 small:flex small:items-center small:justify-center
+              ${isFocused ? "grid-rows-[1fr] opacity-100 mt-4 small:mt-0" : "grid-rows-[0fr] opacity-0 pointer-events-none"}`}
+            >
+              <div className="overflow-hidden min-h-0 small:overflow-visible w-full">
+                <div className="grid grid-cols-3 small:grid-cols-6 gap-3 small:gap-4 w-full mx-auto">
+                  {categories.map((cat) => {
+                    const Icon = CategoryIcons[cat.handle] || CategoryIcons.accessories
+                    return (
+                      <LocalizedClientLink
+                        key={cat.id}
+                        href={`/categories/${cat.handle}`}
+                        className="flex flex-col items-center gap-2 py-3 small:py-4 px-2 rounded-2xl bg-white/60 dark:bg-white/10 border border-gray-200/40 dark:border-white/10 backdrop-blur-sm hover:bg-white hover:scale-105 dark:hover:bg-white/20 transition-all"
+                      >
+                        <Icon className="w-6 h-6 small:w-8 small:h-8 text-blue-600 dark:text-blue-400" />
+                        <span className="text-xs small:text-sm font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
+                          {cat.name}
+                        </span>
+                      </LocalizedClientLink>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -231,7 +238,7 @@ export default function HeroInteractive({
       </div>
 
       {/* Unified search + trust card — bridges the curved bottom edge */}
-      <div className="relative z-20 -mt-8 small:-mt-10 px-5" ref={dropdownRef}>
+      <div className="relative z-20 -mt-8 small:-mt-10 px-5">
         <div className={`max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl shadow-gray-900/10 dark:shadow-black/30 overflow-hidden transition-all duration-300 ${isFocused ? "shadow-2xl shadow-blue-500/10 dark:shadow-blue-500/10 ring-2 ring-blue-500/30" : ""}`}>
           {/* Search input */}
           <form onSubmit={handleSubmit}>
