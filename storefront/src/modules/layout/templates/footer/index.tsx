@@ -13,7 +13,7 @@ export default async function Footer() {
   ])
 
   return (
-    <footer className="border-t border-ui-border-base dark:border-gray-800 w-full bg-gray-50 dark:bg-gray-950">
+    <footer className="relative z-10 w-full bg-gray-50 dark:bg-gray-950 rounded-t-[2.5rem] small:rounded-t-[3.5rem] -mt-6 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.2)]">
       <div className="content-container flex flex-col w-full">
         <div className="grid grid-cols-1 small:grid-cols-4 gap-8 py-16">
           {/* Brand Column */}
