@@ -120,7 +120,7 @@ export default async function Footer() {
           </div>
         </div>
 
-        <div className="flex w-full py-6 border-t border-gray-200 dark:border-gray-800 justify-between text-gray-500 dark:text-gray-500">
+        <div className="flex w-full py-6 pb-24 small:pb-6 border-t border-gray-200 dark:border-gray-800 justify-between text-gray-500 dark:text-gray-500">
           <Text className="txt-compact-small">
             &copy; {new Date().getFullYear()} {STORE_NAME}. {t("rights")}
           </Text>
