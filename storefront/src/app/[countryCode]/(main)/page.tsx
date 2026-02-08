@@ -33,11 +33,13 @@ export default async function Home(props: {
     <>
       <Hero />
       <CategoryShowcase />
-      <div className="py-12 bg-[var(--bg-primary)]">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections.slice(0, 2)} region={region} />
-        </ul>
-      </div>
+      {collections.length > 0 && (
+        <div className="py-12 bg-[var(--bg-primary)]">
+          <ul className="flex flex-col gap-x-6">
+            <FeaturedProducts collections={collections.slice(0, 2)} region={region} />
+          </ul>
+        </div>
+      )}
     </>
   )
 }

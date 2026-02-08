@@ -26,7 +26,7 @@ export default async function CategoryShowcase() {
   })
 
   return (
-    <div className="py-16 bg-[var(--bg-primary)]">
+    <div className="py-8 small:py-24 bg-[var(--bg-primary)]">
       <div className="content-container">
         <div className="flex flex-col items-center mb-10">
           <h2 className="text-2xl small:text-3xl font-bold text-gray-900 dark:text-white">
