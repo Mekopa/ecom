@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useEffect } from "react"
-import { useFormState } from "react-dom"
+import React, { useEffect, useActionState } from "react";
 
 import Input from "@modules/common/components/input"
 
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
 import { updateCustomer } from "@lib/data/customer"
+import { useTranslations } from "next-intl"
 
 type MyInformationProps = {
   customer: HttpTypes.StoreCustomer
@@ -15,6 +15,7 @@ type MyInformationProps = {
 
 const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
+  const t = useTranslations("account")
 
   const updateCustomerPhone = async (
     _currentState: Record<string, unknown>,
@@ -32,7 +33,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
     }
   }
 
-  const [state, formAction] = useFormState(updateCustomerPhone, {
+  const [state, formAction] = useActionState(updateCustomerPhone, {
     error: false,
     success: false,
   })
@@ -48,7 +49,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   return (
     <form action={formAction} className="w-full">
       <AccountInfo
-        label="Phone"
+        label={t("phone")}
         currentInfo={`${customer.phone}`}
         isSuccess={successState}
         isError={!!state.error}
@@ -58,7 +59,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
       >
         <div className="grid grid-cols-1 gap-y-2">
           <Input
-            label="Phone"
+            label={t("phone")}
             name="phone"
             type="phone"
             autoComplete="phone"

@@ -1,5 +1,8 @@
+"use client"
+
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@medusajs/ui"
+import { useTranslations } from "next-intl"
 
 type OrderDetailsProps = {
   order: HttpTypes.StoreOrder
@@ -7,6 +10,7 @@ type OrderDetailsProps = {
 }
 
 const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
+  const t = useTranslations("checkout")
   const formatStatus = (str: string) => {
     const formatted = str.split("_").join(" ")
 
@@ -16,7 +20,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
   return (
     <div>
       <Text>
-        We have sent the order confirmation details to{" "}
+        {t("orderConfirmationSent")}{" "}
         <span
           className="text-ui-fg-medium-plus font-semibold"
           data-testid="order-email"
@@ -26,32 +30,31 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
         .
       </Text>
       <Text className="mt-2">
-        Order date:{" "}
+        {t("orderDate")}{" "}
         <span data-testid="order-date">
           {new Date(order.created_at).toDateString()}
         </span>
       </Text>
       <Text className="mt-2 text-ui-fg-interactive">
-        Order number: <span data-testid="order-id">{order.display_id}</span>
+        {t("orderNumber")} <span data-testid="order-id">{order.display_id}</span>
       </Text>
 
       <div className="flex items-center text-compact-small gap-x-4 mt-4">
         {showStatus && (
           <>
             <Text>
-              Order status:{" "}
+              {t("orderStatus")}{" "}
               <span className="text-ui-fg-subtle " data-testid="order-status">
-                {/* TODO: Check where the statuses should come from */}
-                {/* {formatStatus(order.fulfillment_status)} */}
+                {formatStatus(order.fulfillment_status)}
               </span>
             </Text>
             <Text>
-              Payment status:{" "}
+              {t("paymentStatus")}{" "}
               <span
                 className="text-ui-fg-subtle "
                 sata-testid="order-payment-status"
               >
-                {/* {formatStatus(order.payment_status)} */}
+                {formatStatus(order.payment_status)}
               </span>
             </Text>
           </>

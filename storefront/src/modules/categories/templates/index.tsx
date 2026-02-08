@@ -8,14 +8,15 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { getTranslations } from "next-intl/server"
 
-export default function CategoryTemplate({
-  categories,
+export default async function CategoryTemplate({
+  category,
   sortBy,
   page,
   countryCode,
 }: {
-  categories: HttpTypes.StoreProductCategory[]
+  category: HttpTypes.StoreProductCategory
   sortBy?: SortOptions
   page?: string
   countryCode: string
@@ -23,10 +24,22 @@ export default function CategoryTemplate({
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
 
-  const category = categories[categories.length - 1]
-  const parents = categories.slice(0, categories.length - 1)
-
   if (!category || !countryCode) notFound()
+
+  const tCat = await getTranslations("categories")
+  const translateCat = (c: { handle: string; name: string }) =>
+    tCat.has(c.handle) ? tCat(c.handle) : c.name
+
+  const parents = [] as HttpTypes.StoreProductCategory[]
+
+  const getParents = (category: HttpTypes.StoreProductCategory) => {
+    if (category.parent_category) {
+      parents.push(category.parent_category)
+      getParents(category.parent_category)
+    }
+  }
+
+  getParents(category)
 
   return (
     <div
@@ -44,12 +57,12 @@ export default function CategoryTemplate({
                   href={`/categories/${parent.handle}`}
                   data-testid="sort-by-link"
                 >
-                  {parent.name}
+                  {translateCat(parent)}
                 </LocalizedClientLink>
                 /
               </span>
             ))}
-          <h1 data-testid="category-page-title">{category.name}</h1>
+          <h1 data-testid="category-page-title">{translateCat(category)}</h1>
         </div>
         {category.description && (
           <div className="mb-8 text-base-regular">
@@ -62,14 +75,20 @@ export default function CategoryTemplate({
               {category.category_children?.map((c) => (
                 <li key={c.id}>
                   <InteractiveLink href={`/categories/${c.handle}`}>
-                    {c.name}
+                    {translateCat(c)}
                   </InteractiveLink>
                 </li>
               ))}
             </ul>
           </div>
         )}
-        <Suspense fallback={<SkeletonProductGrid />}>
+        <Suspense
+          fallback={
+            <SkeletonProductGrid
+              numberOfProducts={category.products?.length ?? 8}
+            />
+          }
+        >
           <PaginatedProducts
             sortBy={sort}
             page={pageNumber}

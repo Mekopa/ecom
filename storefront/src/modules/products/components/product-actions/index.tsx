@@ -1,18 +1,18 @@
 "use client"
 
-import { Button } from "@medusajs/ui"
-import { isEqual } from "lodash"
-import { useParams } from "next/navigation"
-import { useEffect, useMemo, useRef, useState } from "react"
-
+import { addToCart } from "@lib/data/cart"
 import { useIntersection } from "@lib/hooks/use-in-view"
+import { HttpTypes } from "@medusajs/types"
+import { Button } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
-
-import MobileActions from "./mobile-actions"
+import { isEqual } from "lodash"
+import { useParams, usePathname, useSearchParams } from "next/navigation"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useTranslations } from "next-intl"
 import ProductPrice from "../product-price"
-import { addToCart } from "@lib/data/cart"
-import { HttpTypes } from "@medusajs/types"
+import MobileActions from "./mobile-actions"
+import { useRouter } from "next/navigation"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -20,20 +20,24 @@ type ProductActionsProps = {
   disabled?: boolean
 }
 
-const optionsAsKeymap = (variantOptions: any) => {
-  return variantOptions?.reduce((acc: Record<string, string | undefined>, varopt: any) => {
-    if (varopt.option && varopt.value !== null && varopt.value !== undefined) {
-      acc[varopt.option.title] = varopt.value
-    }
+const optionsAsKeymap = (
+  variantOptions: HttpTypes.StoreProductVariant["options"]
+) => {
+  return variantOptions?.reduce((acc: Record<string, string>, varopt: any) => {
+    acc[varopt.option_id] = varopt.value
     return acc
   }, {})
 }
 
 export default function ProductActions({
   product,
-  region,
   disabled,
 }: ProductActionsProps) {
+  const t = useTranslations("product")
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
@@ -58,12 +62,37 @@ export default function ProductActions({
   }, [product.variants, options])
 
   // update the options when a variant is selected
-  const setOptionValue = (title: string, value: string) => {
+  const setOptionValue = (optionId: string, value: string) => {
     setOptions((prev) => ({
       ...prev,
-      [title]: value,
+      [optionId]: value,
     }))
   }
+
+  //check if the selected options produce a valid variant
+  const isValidVariant = useMemo(() => {
+    return product.variants?.some((v) => {
+      const variantOptions = optionsAsKeymap(v.options)
+      return isEqual(variantOptions, options)
+    })
+  }, [product.variants, options])
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    const value = isValidVariant ? selectedVariant?.id : null
+
+    if (params.get("v_id") === value) {
+      return
+    }
+
+    if (value) {
+      params.set("v_id", value)
+    } else {
+      params.delete("v_id")
+    }
+
+    router.replace(pathname + "?" + params.toString())
+  }, [selectedVariant, isValidVariant])
 
   // check if the selected variant is in stock
   const inStock = useMemo(() => {
@@ -119,7 +148,7 @@ export default function ProductActions({
                   <div key={option.id}>
                     <OptionSelect
                       option={option}
-                      current={options[option.title ?? ""]}
+                      current={options[option.id]}
                       updateOption={setOptionValue}
                       title={option.title ?? ""}
                       data-testid="product-options"
@@ -137,17 +166,23 @@ export default function ProductActions({
 
         <Button
           onClick={handleAddToCart}
-          disabled={!inStock || !selectedVariant || !!disabled || isAdding}
+          disabled={
+            !inStock ||
+            !selectedVariant ||
+            !!disabled ||
+            isAdding ||
+            !isValidVariant
+          }
           variant="primary"
           className="w-full h-10"
           isLoading={isAdding}
           data-testid="add-product-button"
         >
-          {!selectedVariant
-            ? "Select variant"
-            : !inStock
-            ? "Out of stock"
-            : "Add to cart"}
+          {!selectedVariant && !options
+            ? t("selectVariantBtn")
+            : !inStock || !isValidVariant
+            ? t("outOfStock")
+            : t("addToCart")}
         </Button>
         <MobileActions
           product={product}

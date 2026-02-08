@@ -1,6 +1,13 @@
 import React from "react"
 import { CreditCard } from "@medusajs/icons"
 
+// ── Brand ───────────────────────────────────────────────────────────
+// Change this single value to rebrand the entire storefront.
+export const STORE_NAME = "Electro Store"
+export const STORE_NAME_SHORT = "Electro Store" // for tight spaces
+export const STORE_DESCRIPTION =
+  "Discover premium electronics, smartphones, laptops, audio gear, and accessories at unbeatable prices."
+
 import Ideal from "@modules/common/icons/ideal"
 import Bancontact from "@modules/common/icons/bancontact"
 import PayPal from "@modules/common/icons/paypal"
@@ -11,6 +18,10 @@ export const paymentInfoMap: Record<
   { title: string; icon: React.JSX.Element }
 > = {
   pp_stripe_stripe: {
+    title: "Credit card",
+    icon: <CreditCard />,
+  },
+  "pp_medusa-payments_default": {
     title: "Credit card",
     icon: <CreditCard />,
   },
@@ -33,10 +44,13 @@ export const paymentInfoMap: Record<
   // Add more payment providers here
 }
 
-// This only checks if it is native stripe for card payments, it ignores the other stripe-based providers
-export const isStripe = (providerId?: string) => {
-  return providerId?.startsWith("pp_stripe_")
+// This only checks if it is native stripe or medusa payments for card payments, it ignores the other stripe-based providers
+export const isStripeLike = (providerId?: string) => {
+  return (
+    providerId?.startsWith("pp_stripe_") || providerId?.startsWith("pp_medusa-")
+  )
 }
+
 export const isPaypal = (providerId?: string) => {
   return providerId?.startsWith("pp_paypal")
 }

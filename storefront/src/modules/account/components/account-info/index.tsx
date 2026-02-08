@@ -1,9 +1,10 @@
-import { Disclosure } from "@headlessui/react"
+import { Disclosure, DisclosurePanel } from "@headlessui/react"
 import { Badge, Button, clx } from "@medusajs/ui"
 import { useEffect } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { useFormStatus } from "react-dom"
+import { useTranslations } from "next-intl"
 
 type AccountInfoProps = {
   label: string
@@ -22,13 +23,13 @@ const AccountInfo = ({
   isSuccess,
   isError,
   clearState,
-  errorMessage = "An error occurred, please try again",
+  errorMessage,
   children,
   'data-testid': dataTestid
 }: AccountInfoProps) => {
   const { state, close, toggle } = useToggleState()
-
   const { pending } = useFormStatus()
+  const t = useTranslations("account")
 
   const handleToggle = () => {
     clearState()
@@ -63,14 +64,14 @@ const AccountInfo = ({
             data-testid="edit-button"
             data-active={state}
           >
-            {state ? "Cancel" : "Edit"}
+            {state ? t("cancel") : t("edit")}
           </Button>
         </div>
       </div>
 
       {/* Success state */}
       <Disclosure>
-        <Disclosure.Panel
+        <DisclosurePanel
           static
           className={clx(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
@@ -82,14 +83,14 @@ const AccountInfo = ({
           data-testid="success-message"
         >
           <Badge className="p-2 my-4" color="green">
-            <span>{label} updated succesfully</span>
+            <span>{t("updateSuccess", { label })}</span>
           </Badge>
-        </Disclosure.Panel>
+        </DisclosurePanel>
       </Disclosure>
 
       {/* Error state  */}
       <Disclosure>
-        <Disclosure.Panel
+        <DisclosurePanel
           static
           className={clx(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
@@ -101,13 +102,13 @@ const AccountInfo = ({
           data-testid="error-message"
         >
           <Badge className="p-2 my-4" color="red">
-            <span>{errorMessage}</span>
+            <span>{errorMessage || t("errorDefault")}</span>
           </Badge>
-        </Disclosure.Panel>
+        </DisclosurePanel>
       </Disclosure>
 
       <Disclosure>
-        <Disclosure.Panel
+        <DisclosurePanel
           static
           className={clx(
             "transition-[max-height,opacity] duration-300 ease-in-out overflow-visible",
@@ -126,11 +127,11 @@ const AccountInfo = ({
                 type="submit"
                 data-testid="save-button"
               >
-                Save changes
+                {t("saveChanges")}
               </Button>
             </div>
           </div>
-        </Disclosure.Panel>
+        </DisclosurePanel>
       </Disclosure>
     </div>
   )
