@@ -195,7 +195,10 @@ export default function HeroInteractive({
 
                 <button
                   onClick={() => {
-                    inputRef.current?.focus()
+                    const isMobile = window.innerWidth < 768
+                    if (!isMobile) {
+                      inputRef.current?.focus()
+                    }
                     setIsFocused(true)
                   }}
                   className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/70 dark:bg-white/10 border border-gray-200/60 dark:border-white/10 backdrop-blur-sm hover:bg-white dark:hover:bg-white/20 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all"
