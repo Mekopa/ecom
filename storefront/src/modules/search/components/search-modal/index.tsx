@@ -1,6 +1,6 @@
 "use client"
 
-import { XMark } from "@medusajs/icons"
+import { ArrowRightMini, XMark } from "@medusajs/icons"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
@@ -29,6 +29,29 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [results, setResults] = useState<HttpTypes.StoreProduct[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
+
+  // Two-phase animation state
+  const [isVisible, setIsVisible] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
+  const ANIMATION_DURATION = 220
+
+  // Mount/unmount with animation phases
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true)
+      setIsClosing(false)
+    }
+  }, [isOpen])
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true)
+    setTimeout(() => {
+      setIsVisible(false)
+      setIsClosing(false)
+      onClose()
+    }, ANIMATION_DURATION)
+  }, [onClose])
 
   const performSearch = useCallback(
     async (searchQuery: string) => {
@@ -65,24 +88,25 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   }
 
   const handleNavigate = (handle: string) => {
-    onClose()
-    setQuery("")
-    setResults([])
-    setHasSearched(false)
-    router.push(`/${countryCode}/products/${handle}`)
+    handleClose()
+    setTimeout(() => {
+      setQuery("")
+      setResults([])
+      setHasSearched(false)
+      router.push(`/${countryCode}/products/${handle}`)
+    }, ANIMATION_DURATION)
   }
 
-  // Reset state when modal closes
+  // Reset state when fully closed
   useEffect(() => {
-    if (!isOpen) {
+    if (!isVisible) {
       setQuery("")
       setResults([])
       setHasSearched(false)
     } else {
-      // Focus input when modal opens
       setTimeout(() => inputRef.current?.focus(), 100)
     }
-  }, [isOpen])
+  }, [isVisible])
 
   // Cleanup debounce timer
   useEffect(() => {
@@ -93,24 +117,24 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
   // Close on Escape key
   useEffect(() => {
-    if (!isOpen) return
+    if (!isVisible || isClosing) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
+      if (e.key === "Escape") handleClose()
     }
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, onClose])
+  }, [isVisible, isClosing, handleClose])
 
   // Close on backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
-      onClose()
+      handleClose()
     }
   }
 
   // Lock body scroll when open
   useEffect(() => {
-    if (isOpen) {
+    if (isVisible) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
@@ -118,26 +142,43 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
     return () => {
       document.body.style.overflow = ""
     }
-  }, [isOpen])
+  }, [isVisible])
 
-  if (!isOpen) return null
+  if (!isVisible) return null
 
   return (
     <div className="fixed inset-0 z-[60]">
-      {/* Backdrop */}
+      {/* Frosted backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 animate-[fadeIn_200ms_ease-out]"
+        className={`fixed inset-0 bg-black/30 backdrop-blur-md ${
+          isClosing ? "animate-backdrop-fade-out" : "animate-backdrop-fade-in"
+        }`}
         onClick={handleBackdropClick}
       >
-        {/* Modal */}
+        {/* Responsive container */}
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-start small:items-center small:justify-center small:p-4">
+          <div className="flex min-h-full items-end small:items-start small:justify-center small:pt-[12vh]">
+            {/* Modal panel — mobile bottom sheet / desktop spotlight */}
             <div
               ref={panelRef}
-              className="w-full h-screen small:h-auto small:max-h-[80vh] small:max-w-2xl small:rounded-xl bg-white dark:bg-gray-900 shadow-xl flex flex-col overflow-hidden animate-[slideUp_200ms_ease-out]"
+              className={`
+                w-full flex flex-col overflow-hidden
+                max-h-[85vh] rounded-t-[1.5rem]
+                small:max-w-2xl small:rounded-2xl small:max-h-[70vh]
+                bg-white/80 dark:bg-gray-900/80
+                backdrop-blur-xl
+                ring-1 ring-black/5 dark:ring-white/10
+                border border-gray-200/50 dark:border-white/10
+                shadow-2xl
+                ${
+                  isClosing
+                    ? "animate-sheet-slide-down small:animate-search-leave"
+                    : "animate-sheet-slide-up small:animate-search-enter"
+                }
+              `}
             >
-              {/* Header with search input */}
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+              {/* Search header */}
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-200/50 dark:border-white/10">
                 <Search size="20" className="text-gray-400 flex-shrink-0" />
                 <input
                   ref={inputRef}
@@ -145,7 +186,8 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                   value={query}
                   onChange={(e) => handleInputChange(e.target.value)}
                   placeholder={t("searchPlaceholder")}
-                  className="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 text-base outline-none"
+                  className="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 text-lg outline-none"
+                  style={{ backgroundColor: "transparent" }}
                 />
                 {isLoading && (
                   <Spinner
@@ -153,26 +195,45 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                     className="animate-spin text-gray-400 flex-shrink-0"
                   />
                 )}
+                {/* ESC badge — desktop only */}
+                <kbd className="hidden small:inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-gray-400 dark:text-gray-500 bg-gray-100/80 dark:bg-white/10 rounded-md ring-1 ring-gray-200/50 dark:ring-white/10">
+                  ESC
+                </kbd>
+                {/* Close X — mobile only */}
                 <button
-                  onClick={onClose}
-                  className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  onClick={handleClose}
+                  className="small:hidden p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                 >
                   <XMark />
                 </button>
               </div>
 
-              {/* Results */}
-              <div className="flex-1 overflow-y-auto">
+              {/* Results area */}
+              <div className="flex-1 overflow-y-auto overscroll-contain">
+                {/* Empty state — initial */}
+                {!hasSearched && !isLoading && (
+                  <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+                    <div className="w-12 h-12 rounded-2xl bg-gray-100/80 dark:bg-white/10 flex items-center justify-center mb-4">
+                      <Search size="20" className="opacity-60" />
+                    </div>
+                    <p className="text-sm">{t("searchPlaceholder")}</p>
+                  </div>
+                )}
+
+                {/* No results */}
                 {hasSearched && results.length === 0 && !isLoading && (
                   <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-                    <Search size="48" className="mb-4 opacity-50" />
+                    <div className="w-12 h-12 rounded-2xl bg-gray-100/80 dark:bg-white/10 flex items-center justify-center mb-4">
+                      <Search size="20" className="opacity-60" />
+                    </div>
                     <p className="text-sm">{t("noResults")}</p>
                   </div>
                 )}
 
+                {/* Result list */}
                 {results.length > 0 && (
                   <div className="py-2">
-                    <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <p className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                       {t("searchResults")}
                     </p>
                     <ul>
@@ -187,10 +248,10 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                               onClick={() =>
                                 handleNavigate(product.handle!)
                               }
-                              className="w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                              className="group w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors text-left"
                             >
-                              {/* Product image */}
-                              <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
+                              {/* Thumbnail */}
+                              <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0 ring-1 ring-black/5 dark:ring-white/10">
                                 {product.thumbnail ? (
                                   <Image
                                     src={product.thumbnail}
@@ -217,18 +278,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                                   </p>
                                 )}
                               </div>
+
+                              {/* Hover arrow */}
+                              <ArrowRightMini className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                             </button>
                           </li>
                         )
                       })}
                     </ul>
-                  </div>
-                )}
-
-                {!hasSearched && !isLoading && (
-                  <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-                    <Search size="48" className="mb-4 opacity-50" />
-                    <p className="text-sm">{t("searchPlaceholder")}</p>
                   </div>
                 )}
               </div>

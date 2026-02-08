@@ -133,6 +133,22 @@ module.exports = {
           "0%": { transform: "translateY(100%)" },
           "100%": { transform: "translateY(0)" },
         },
+        "sheet-slide-down": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        "backdrop-fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+        "search-enter": {
+          "0%": { opacity: "0", transform: "translateY(-20px) scale(0.98)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "search-leave": {
+          "0%": { opacity: "1", transform: "translateY(0) scale(1)" },
+          "100%": { opacity: "0", transform: "translateY(-20px) scale(0.98)" },
+        },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
@@ -150,6 +166,10 @@ module.exports = {
         leave: "leave 150ms ease-in forwards",
         "backdrop-fade-in": "backdrop-fade-in 200ms ease-out",
         "sheet-slide-up": "sheet-slide-up 250ms cubic-bezier(0.32, 0.72, 0, 1)",
+        "sheet-slide-down": "sheet-slide-down 200ms cubic-bezier(0.32, 0.72, 0, 1) forwards",
+        "backdrop-fade-out": "backdrop-fade-out 200ms ease-out forwards",
+        "search-enter": "search-enter 250ms cubic-bezier(0.32, 0.72, 0, 1)",
+        "search-leave": "search-leave 200ms cubic-bezier(0.32, 0.72, 0, 1) forwards",
         float: "float 6s ease-in-out infinite",
       },
     },
