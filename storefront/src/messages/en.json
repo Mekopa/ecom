@@ -27,7 +27,10 @@
     "secureCheckout": "Secure Checkout",
     "returns": "30-Day Returns",
     "trustWarranty": "12-Month Warranty",
-    "categoryProductCount": "{count} products"
+    "categoryProductCount": "{count} products",
+    "searchPlaceholder": "Search for {category}...",
+    "noResults": "No products found",
+    "viewAll": "View all results"
   },
   "product": {
     "addToCart": "Add to Cart",

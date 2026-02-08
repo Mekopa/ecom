@@ -27,7 +27,10 @@
     "secureCheckout": "Droša apmaksa",
     "returns": "30 dienu atgriešana",
     "trustWarranty": "12 Mēnešu Garantija",
-    "categoryProductCount": "{count} produkti"
+    "categoryProductCount": "{count} produkti",
+    "searchPlaceholder": "Meklēt {category}...",
+    "noResults": "Produkti nav atrasti",
+    "viewAll": "Skatīt visus rezultātus"
   },
   "product": {
     "addToCart": "Pievienot grozam",

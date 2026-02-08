@@ -39,7 +39,7 @@ const TrustStrip = async () => {
   ]
 
   return (
-    <div className="py-5 bg-gray-50 dark:bg-gray-900/50 border-y border-gray-200 dark:border-gray-800">
+    <div className="pt-10 pb-5 small:pt-12 bg-gray-50 dark:bg-gray-900/50 border-y border-gray-200 dark:border-gray-800">
       <div className="content-container">
         <div className="flex items-center justify-between gap-6 overflow-x-auto no-scrollbar">
           {badges.map((badge) => (

@@ -27,7 +27,10 @@
     "secureCheckout": "Paiement sécurisé",
     "returns": "Retours sous 30 jours",
     "trustWarranty": "Garantie 12 Mois",
-    "categoryProductCount": "{count} produits"
+    "categoryProductCount": "{count} produits",
+    "searchPlaceholder": "Rechercher {category}...",
+    "noResults": "Aucun produit trouvé",
+    "viewAll": "Voir tous les résultats"
   },
   "product": {
     "addToCart": "Ajouter au panier",

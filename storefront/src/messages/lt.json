@@ -27,7 +27,10 @@
     "secureCheckout": "Saugus atsiskaitymas",
     "returns": "30 dienų grąžinimas",
     "trustWarranty": "12 Mėnesių Garantija",
-    "categoryProductCount": "{count} prekių"
+    "categoryProductCount": "{count} prekių",
+    "searchPlaceholder": "Ieškoti {category}...",
+    "noResults": "Produktų nerasta",
+    "viewAll": "Rodyti visus rezultatus"
   },
   "product": {
     "addToCart": "Į krepšelį",
