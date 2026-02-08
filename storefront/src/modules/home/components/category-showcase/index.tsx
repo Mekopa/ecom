@@ -1,6 +1,6 @@
 import { listCategories } from "@lib/data/categories"
 import { getTranslations } from "next-intl/server"
-import CategoryCarousel from "./category-carousel"
+import CategoryGrid from "./category-grid"
 
 export default async function CategoryShowcase() {
   const [productCategories, t, tCat] = await Promise.all([
@@ -37,7 +37,7 @@ export default async function CategoryShowcase() {
           </p>
         </div>
 
-        <CategoryCarousel categories={categories} />
+        <CategoryGrid categories={categories} />
       </div>
     </div>
   )
