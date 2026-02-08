@@ -166,7 +166,7 @@ export default function HeroInteractive({
         <div className={`absolute inset-0 bg-black/0 transition-colors duration-500 z-[1] pointer-events-none ${isFocused ? "bg-black/10 dark:bg-black/20" : ""}`} />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-5 pt-12 pb-20 small:pt-20 small:pb-28">
+        <div className="relative z-10 flex flex-col items-center text-center px-5 pt-20 pb-20 small:pt-28 small:pb-28">
           {/* Title */}
           <h1 className={`text-3xl small:text-5xl leading-tight font-bold text-gray-900 dark:text-white max-w-2xl transition-all duration-500 ${isFocused ? "opacity-40 scale-95 blur-[1px]" : ""}`}>
             {title}
