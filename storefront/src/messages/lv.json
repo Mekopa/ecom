@@ -245,6 +245,34 @@
     "cameras": "Kameras",
     "accessories": "Piederumi"
   },
+  "options": {
+    "Color": "Krāsa",
+    "Storage": "Atmiņa",
+    "Size": "Izmērs"
+  },
+  "optionValues": {
+    "Black": "Melns",
+    "White": "Balts",
+    "Silver": "Sudrabs",
+    "Blue": "Zils",
+    "Red": "Sarkans",
+    "Green": "Zaļš",
+    "Navy": "Tumši zils",
+    "Purple": "Violets",
+    "Orange": "Oranžs",
+    "Cream": "Krēmkrāsa",
+    "Copper": "Vara",
+    "Ivory": "Ziloņkaula",
+    "Midnight": "Pusnakts",
+    "Starlight": "Zvaigžņu gaisma",
+    "Space Gray": "Kosmosa pelēks",
+    "Space Black": "Kosmosa melns",
+    "Platinum": "Platīns",
+    "Graphite": "Grafīts",
+    "Matte Black": "Matēts melns",
+    "Polished Silver": "Pulēts sudrabs",
+    "Midnight Blue": "Pusnakts zils"
+  },
   "store": {
     "allProducts": "Visi produkti",
     "sortBy": "Kārtot pēc",

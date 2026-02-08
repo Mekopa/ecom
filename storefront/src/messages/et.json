@@ -245,6 +245,34 @@
     "cameras": "Kaamerad",
     "accessories": "Tarvikud"
   },
+  "options": {
+    "Color": "Värv",
+    "Storage": "Mälu",
+    "Size": "Suurus"
+  },
+  "optionValues": {
+    "Black": "Must",
+    "White": "Valge",
+    "Silver": "Hõbedane",
+    "Blue": "Sinine",
+    "Red": "Punane",
+    "Green": "Roheline",
+    "Navy": "Meresinine",
+    "Purple": "Lilla",
+    "Orange": "Oranž",
+    "Cream": "Kreemjas",
+    "Copper": "Vasksne",
+    "Ivory": "Elevandiluu",
+    "Midnight": "Kesköö",
+    "Starlight": "Tähevalgusel",
+    "Space Gray": "Kosmosehall",
+    "Space Black": "Kosmosemust",
+    "Platinum": "Plaatina",
+    "Graphite": "Grafiit",
+    "Matte Black": "Matt must",
+    "Polished Silver": "Poleeritud hõbe",
+    "Midnight Blue": "Kesköösinine"
+  },
   "store": {
     "allProducts": "Kõik tooted",
     "sortBy": "Sorteeri",

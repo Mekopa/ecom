@@ -21,11 +21,17 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   disabled,
 }) => {
   const t = useTranslations("product")
+  const tOpt = useTranslations("options")
+  const tVal = useTranslations("optionValues")
+
+  const translatedTitle = tOpt.has(title) ? tOpt(title) : title
   const filteredOptions = (option.values ?? []).map((v) => v.value)
 
   return (
     <div className="flex flex-col gap-y-3">
-      <span className="text-sm">{t("selectVariant", { option: title })}</span>
+      <span className="text-sm">
+        {t("selectVariant", { option: translatedTitle })}
+      </span>
       <div
         className="flex flex-wrap gap-2"
         data-testid={dataTestId}
@@ -46,7 +52,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
               disabled={disabled}
               data-testid="option-button"
             >
-              {v}
+              {tVal.has(v) ? tVal(v) : v}
             </button>
           )
         })}

@@ -245,6 +245,34 @@
     "cameras": "Appareils photo",
     "accessories": "Accessoires"
   },
+  "options": {
+    "Color": "Couleur",
+    "Storage": "Stockage",
+    "Size": "Taille"
+  },
+  "optionValues": {
+    "Black": "Noir",
+    "White": "Blanc",
+    "Silver": "Argent",
+    "Blue": "Bleu",
+    "Red": "Rouge",
+    "Green": "Vert",
+    "Navy": "Bleu marine",
+    "Purple": "Violet",
+    "Orange": "Orange",
+    "Cream": "Crème",
+    "Copper": "Cuivre",
+    "Ivory": "Ivoire",
+    "Midnight": "Minuit",
+    "Starlight": "Lumière stellaire",
+    "Space Gray": "Gris sidéral",
+    "Space Black": "Noir sidéral",
+    "Platinum": "Platine",
+    "Graphite": "Graphite",
+    "Matte Black": "Noir mat",
+    "Polished Silver": "Argent poli",
+    "Midnight Blue": "Bleu nuit"
+  },
   "store": {
     "allProducts": "Tous les produits",
     "sortBy": "Trier par",

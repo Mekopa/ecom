@@ -245,6 +245,34 @@
     "cameras": "Cameras",
     "accessories": "Accessories"
   },
+  "options": {
+    "Color": "Color",
+    "Storage": "Storage",
+    "Size": "Size"
+  },
+  "optionValues": {
+    "Black": "Black",
+    "White": "White",
+    "Silver": "Silver",
+    "Blue": "Blue",
+    "Red": "Red",
+    "Green": "Green",
+    "Navy": "Navy",
+    "Purple": "Purple",
+    "Orange": "Orange",
+    "Cream": "Cream",
+    "Copper": "Copper",
+    "Ivory": "Ivory",
+    "Midnight": "Midnight",
+    "Starlight": "Starlight",
+    "Space Gray": "Space Gray",
+    "Space Black": "Space Black",
+    "Platinum": "Platinum",
+    "Graphite": "Graphite",
+    "Matte Black": "Matte Black",
+    "Polished Silver": "Polished Silver",
+    "Midnight Blue": "Midnight Blue"
+  },
   "store": {
     "allProducts": "All products",
     "sortBy": "Sort by",

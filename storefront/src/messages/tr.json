@@ -245,6 +245,34 @@
     "cameras": "Kameralar",
     "accessories": "Aksesuarlar"
   },
+  "options": {
+    "Color": "Renk",
+    "Storage": "Depolama",
+    "Size": "Boyut"
+  },
+  "optionValues": {
+    "Black": "Siyah",
+    "White": "Beyaz",
+    "Silver": "Gümüş",
+    "Blue": "Mavi",
+    "Red": "Kırmızı",
+    "Green": "Yeşil",
+    "Navy": "Lacivert",
+    "Purple": "Mor",
+    "Orange": "Turuncu",
+    "Cream": "Krem",
+    "Copper": "Bakır",
+    "Ivory": "Fildişi",
+    "Midnight": "Gece Mavisi",
+    "Starlight": "Yıldız Işığı",
+    "Space Gray": "Uzay Grisi",
+    "Space Black": "Uzay Siyahı",
+    "Platinum": "Platin",
+    "Graphite": "Grafit",
+    "Matte Black": "Mat Siyah",
+    "Polished Silver": "Parlak Gümüş",
+    "Midnight Blue": "Gece Mavisi"
+  },
   "store": {
     "allProducts": "Tüm ürünler",
     "sortBy": "Sırala",

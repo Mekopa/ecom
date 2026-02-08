@@ -245,6 +245,34 @@
     "cameras": "Kameras",
     "accessories": "Zubehör"
   },
+  "options": {
+    "Color": "Farbe",
+    "Storage": "Speicher",
+    "Size": "Größe"
+  },
+  "optionValues": {
+    "Black": "Schwarz",
+    "White": "Weiß",
+    "Silver": "Silber",
+    "Blue": "Blau",
+    "Red": "Rot",
+    "Green": "Grün",
+    "Navy": "Marineblau",
+    "Purple": "Lila",
+    "Orange": "Orange",
+    "Cream": "Creme",
+    "Copper": "Kupfer",
+    "Ivory": "Elfenbein",
+    "Midnight": "Mitternacht",
+    "Starlight": "Sternenlicht",
+    "Space Gray": "Space Grau",
+    "Space Black": "Space Schwarz",
+    "Platinum": "Platin",
+    "Graphite": "Graphit",
+    "Matte Black": "Mattschwarz",
+    "Polished Silver": "Poliertes Silber",
+    "Midnight Blue": "Mitternachtsblau"
+  },
   "store": {
     "allProducts": "Alle Produkte",
     "sortBy": "Sortieren nach",

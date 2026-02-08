@@ -4,7 +4,8 @@ import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
 import PreviewPrice from "./price"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
+import { getProductTranslation } from "@lib/util/product-i18n"
 
 export default async function ProductPreview({
   product,
@@ -15,10 +16,12 @@ export default async function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
-  const [{ cheapestPrice }, tCat] = await Promise.all([
+  const [{ cheapestPrice }, tCat, locale] = await Promise.all([
     Promise.resolve(getProductPrice({ product })),
     getTranslations("categories"),
+    getLocale(),
   ])
+  const translated = getProductTranslation(product, locale)
 
   // Extract category info from product categories
   const category = product.categories?.[0]
@@ -53,7 +56,7 @@ export default async function ProductPreview({
               className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
               data-testid="product-title"
             >
-              {product.title}
+              {translated.title}
             </Text>
           </div>
           <div className="flex items-center gap-x-2">

@@ -245,6 +245,34 @@
     "cameras": "Fotoaparatai",
     "accessories": "Priedai"
   },
+  "options": {
+    "Color": "Spalva",
+    "Storage": "Atmintis",
+    "Size": "Dydis"
+  },
+  "optionValues": {
+    "Black": "Juoda",
+    "White": "Balta",
+    "Silver": "Sidabrinė",
+    "Blue": "Mėlyna",
+    "Red": "Raudona",
+    "Green": "Žalia",
+    "Navy": "Tamsiai mėlyna",
+    "Purple": "Violetinė",
+    "Orange": "Oranžinė",
+    "Cream": "Kreminė",
+    "Copper": "Varinė",
+    "Ivory": "Dramblio kaulo",
+    "Midnight": "Vidurnakčio",
+    "Starlight": "Žvaigždžių šviesa",
+    "Space Gray": "Kosmoso pilka",
+    "Space Black": "Kosmoso juoda",
+    "Platinum": "Platininė",
+    "Graphite": "Grafitinė",
+    "Matte Black": "Matinė juoda",
+    "Polished Silver": "Poliruotas sidabras",
+    "Midnight Blue": "Vidurnakčio mėlyna"
+  },
   "store": {
     "allProducts": "Visi produktai",
     "sortBy": "Rūšiuoti pagal",

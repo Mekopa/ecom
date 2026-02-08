@@ -9,7 +9,8 @@ import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-relat
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { notFound } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
+import { getProductTranslation } from "@lib/util/product-i18n"
 
 import ProductActionsWrapper from "./product-actions-wrapper"
 
@@ -28,10 +29,12 @@ export default async function ProductTemplate({
     return notFound()
   }
 
+  const locale = await getLocale()
   const tCat = await getTranslations("categories")
   const tNav = await getTranslations("nav")
   const translateCat = (c: { handle: string; name: string }) =>
     tCat.has(c.handle) ? tCat(c.handle) : c.name
+  const translated = getProductTranslation(product, locale)
 
   const category = (product as any).categories?.[0] as
     | { id: string; handle: string; name: string }
@@ -60,7 +63,7 @@ export default async function ProductTemplate({
             </LocalizedClientLink>
             <span>/</span>
             <span className="text-ui-fg-base line-clamp-1">
-              {product.title}
+              {translated.title}
             </span>
           </nav>
         )}

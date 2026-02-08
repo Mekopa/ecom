@@ -10,7 +10,8 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import OptionSelect from "./option-select"
 import { HttpTypes } from "@medusajs/types"
 import { isSimpleProduct } from "@lib/util/product"
-import { useTranslations } from "next-intl"
+import { getProductTranslation } from "@lib/util/product-i18n"
+import { useTranslations, useLocale } from "next-intl"
 
 type MobileActionsProps = {
   product: HttpTypes.StoreProduct
@@ -36,6 +37,9 @@ const MobileActions: React.FC<MobileActionsProps> = ({
   optionsDisabled,
 }) => {
   const t = useTranslations("product")
+  const tVal = useTranslations("optionValues")
+  const locale = useLocale()
+  const translated = getProductTranslation(product, locale)
   const [isOpen, setIsOpen] = useState(false)
   const sheetRef = useRef<HTMLDivElement>(null)
 
@@ -104,7 +108,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
           data-testid="mobile-actions"
         >
           <div className="flex items-center gap-x-2">
-            <span data-testid="mobile-title">{product.title}</span>
+            <span data-testid="mobile-title">{translated.title}</span>
             <span>—</span>
             {selectedPrice ? (
               <div className="flex items-end gap-x-2 text-ui-fg-base">
@@ -143,7 +147,9 @@ const MobileActions: React.FC<MobileActionsProps> = ({
                 <div className="flex items-center justify-between w-full">
                   <span>
                     {variant
-                      ? Object.values(options).join(" / ")
+                      ? Object.values(options)
+                          .map((v) => (v && tVal.has(v) ? tVal(v) : v))
+                          .join(" / ")
                       : t("selectOptions")}
                   </span>
                   <ChevronDown />
