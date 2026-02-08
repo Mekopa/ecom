@@ -2,6 +2,94 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --fg-primary: #111827;
+    --fg-secondary: #4b5563;
+    --fg-muted: #9ca3af;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-light: #dbeafe;
+    --border: #e5e7eb;
+    --surface: #ffffff;
+    --surface-hover: #f9fafb;
+    --card: #ffffff;
+    --card-hover: #f9fafb;
+  }
+
+  .dark {
+    --bg-primary: #0f1117;
+    --bg-secondary: #1a1d27;
+    --bg-tertiary: #252836;
+    --fg-primary: #f3f4f6;
+    --fg-secondary: #d1d5db;
+    --fg-muted: #6b7280;
+    --accent: #60a5fa;
+    --accent-hover: #93c5fd;
+    --accent-light: #1e3a5f;
+    --border: #374151;
+    --surface: #1a1d27;
+    --surface-hover: #252836;
+    --card: #1a1d27;
+    --card-hover: #252836;
+
+    /* ── Medusa UI token overrides for dark mode ─────────── */
+    --fg-base: #f3f4f6;
+    --fg-subtle: #d1d5db;
+    --fg-muted: #6b7280;
+    --fg-disabled: #4b5563;
+    --fg-on-color: #f3f4f6;
+    --fg-on-inverted: #111827;
+    --fg-interactive: #60a5fa;
+    --fg-interactive-hover: #93c5fd;
+    --fg-error: #f87171;
+
+    --bg-base: #0f1117;
+    --bg-subtle: #1a1d27;
+    --bg-component: #252836;
+    --bg-field: #1a1d27;
+    --bg-field-hover: #252836;
+    --bg-interactive: #3b82f6;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+    --bg-disabled: #1f2937;
+    --bg-highlight: #1e3a5f;
+    --bg-highlight-hover: #1e40af;
+    --bg-switch-off: #374151;
+
+    --border-base: #374151;
+    --border-strong: #4b5563;
+    --border-interactive: #3b82f6;
+    --border-error: #f87171;
+    --border-danger: #f87171;
+    --border-transparent: transparent;
+
+    --button-inverted: #f3f4f6;
+    --button-inverted-hover: #e5e7eb;
+    --button-inverted-pressed: #d1d5db;
+
+    --code-bg-base: #1a1d27;
+    --code-bg-subtle: #252836;
+    --code-border: #374151;
+    --code-fg-base: #f3f4f6;
+    --code-fg-subtle: #d1d5db;
+    --code-fg-muted: #6b7280;
+
+    --tag-neutral-bg: #252836;
+    --tag-neutral-bg-hover: #374151;
+    --tag-neutral-text: #d1d5db;
+    --tag-neutral-icon: #6b7280;
+    --tag-neutral-border: #374151;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
+  }
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -41,6 +129,20 @@
     transition: background-color 5000s ease-in-out 0s;
   }
 
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark textarea:-webkit-autofill,
+  .dark textarea:-webkit-autofill:hover,
+  .dark textarea:-webkit-autofill:focus,
+  .dark select:-webkit-autofill,
+  .dark select:-webkit-autofill:hover,
+  .dark select:-webkit-autofill:focus {
+    border: 1px solid #4b5563;
+    -webkit-text-fill-color: #f3f4f6;
+    -webkit-box-shadow: 0 0 0px 1000px #1a1d27 inset;
+  }
+
   input[type="search"]::-webkit-search-decoration,
   input[type="search"]::-webkit-search-cancel-button,
   input[type="search"]::-webkit-search-results-button,
@@ -55,7 +157,7 @@
   }
 
   .contrast-btn {
-    @apply px-4 py-2 border border-black rounded-full hover:bg-black hover:text-white transition-colors duration-200 ease-in;
+    @apply px-4 py-2 border border-black dark:border-white rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200 ease-in;
   }
 
   .text-xsmall-regular {
@@ -109,4 +211,128 @@
   .text-3xl-semi {
     @apply text-[32px] leading-[44px] font-semibold;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DARK MODE THEME OVERRIDES
+   ─────────────────────────────────────────────────────────────────
+   Placed OUTSIDE @layer so these always beat Tailwind utilities.
+   This is the single source of truth for dark mode colors.
+   No need to add dark: classes to individual components.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Backgrounds ─────────────────────────────────────────────────── */
+.dark .bg-white {
+  background-color: var(--bg-primary);
+}
+.dark .bg-gray-50 {
+  background-color: var(--bg-secondary);
+}
+.dark .bg-gray-100 {
+  background-color: var(--bg-tertiary);
+}
+
+/* ── Text colors ─────────────────────────────────────────────────── */
+.dark .text-black {
+  color: var(--fg-primary);
+}
+.dark .text-gray-900 {
+  color: var(--fg-primary);
+}
+.dark .text-gray-800 {
+  color: var(--fg-primary);
+}
+.dark .text-gray-700 {
+  color: var(--fg-secondary);
+}
+.dark .text-gray-600 {
+  color: var(--fg-secondary);
+}
+.dark .text-gray-500 {
+  color: var(--fg-muted);
+}
+
+/* ── Borders ─────────────────────────────────────────────────────── */
+.dark .border-gray-200 {
+  border-color: var(--border);
+}
+.dark .border-gray-300 {
+  border-color: #4b5563;
+}
+.dark .border-gray-100 {
+  border-color: var(--border);
+}
+
+/* ── Inputs & Form fields ────────────────────────────────────────── */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--bg-secondary);
+  color: var(--fg-primary);
+  border-color: var(--border);
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--fg-muted);
+}
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: var(--accent);
+}
+
+/* ── Shadows & Effects ───────────────────────────────────────────── */
+.dark .shadow-xl,
+.dark .shadow-lg,
+.dark .shadow-md,
+.dark .shadow {
+  --tw-shadow-color: rgba(0, 0, 0, 0.4);
+}
+.dark .drop-shadow-md {
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.4)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* ── Ring / Focus states ─────────────────────────────────────────── */
+.dark .ring-white,
+.dark .focus-visible\:ring-white:focus-visible {
+  --tw-ring-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Dividers & Separators ───────────────────────────────────────── */
+.dark .divide-gray-200 > :not(:last-child) {
+  border-color: var(--border);
+}
+.dark .bg-gray-200 {
+  background-color: var(--border);
+}
+
+/* ── Hover states ────────────────────────────────────────────────── */
+.dark .hover\:bg-gray-50:hover {
+  background-color: var(--bg-tertiary);
+}
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* ── Medusa UI component-level fixes ─────────────────────────────── */
+.dark [data-testid] .bg-white,
+.dark [class*="bg-white"] {
+  background-color: var(--bg-primary);
+}
+
+/* Buttons keep their accent colors — only fix neutral buttons */
+.dark .bg-gray-900 {
+  background-color: var(--fg-primary);
+}
+
+/* Scrollbar in dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
 }
