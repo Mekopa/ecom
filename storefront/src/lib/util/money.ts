@@ -11,7 +11,7 @@ type ConvertToLocaleParams = {
 export const convertToLocale = ({
   amount,
   currency_code,
-  minimumFractionDigits,
+  minimumFractionDigits = 0,
   maximumFractionDigits,
   locale = "en-US",
 }: ConvertToLocaleParams) => {
@@ -21,6 +21,6 @@ export const convertToLocale = ({
         currency: currency_code,
         minimumFractionDigits,
         maximumFractionDigits,
-      }).format(amount)
+      }).format(amount / 100)
     : amount.toString()
 }
