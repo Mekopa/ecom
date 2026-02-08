@@ -11,6 +11,7 @@ type ThumbnailProps = {
   size?: "small" | "medium" | "large" | "full" | "square"
   isFeatured?: boolean
   className?: string
+  productName?: string
   "data-testid"?: string
 }
 
@@ -20,6 +21,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   size = "small",
   isFeatured,
   className,
+  productName,
   "data-testid": dataTestid,
 }) => {
   const initialImage = thumbnail || images?.[0]?.url
@@ -31,8 +33,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         className,
         {
           "aspect-[4/5]": isFeatured,
-          "aspect-[1/1]": !isFeatured && size !== "square",
-          "aspect-[1/1]": size === "square",
+          "aspect-[1/1]": !isFeatured,
           "w-[180px]": size === "small",
           "w-[290px]": size === "medium",
           "w-[440px]": size === "large",
@@ -41,7 +42,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       )}
       data-testid={dataTestid}
     >
-      <ImageOrPlaceholder image={initialImage} size={size} />
+      <ImageOrPlaceholder image={initialImage} size={size} productName={productName} />
     </Container>
   )
 }
@@ -49,7 +50,8 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
 const ImageOrPlaceholder = ({
   image,
   size,
-}: Pick<ThumbnailProps, "size"> & { image?: string }) => {
+  productName,
+}: Pick<ThumbnailProps, "size" | "productName"> & { image?: string }) => {
   return image ? (
     <Image
       src={image}
@@ -61,8 +63,13 @@ const ImageOrPlaceholder = ({
       fill
     />
   ) : (
-    <div className="w-full h-full absolute inset-0 flex items-center justify-center">
-      <PlaceholderImage size={size === "small" ? 16 : 24} />
+    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-ui-fg-subtle">
+      <PlaceholderImage size={48} />
+      {productName && (
+        <span className="text-ui-fg-muted text-xs text-center line-clamp-2">
+          {productName}
+        </span>
+      )}
     </div>
   )
 }

@@ -29,23 +29,22 @@ export default async function ProductPreview({
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div data-testid="product-wrapper" className="flex flex-col">
-        <div className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 group-hover:border-blue-300 dark:group-hover:border-blue-600 transition-all duration-300">
+        <div className="relative">
           <Thumbnail
             thumbnail={product.thumbnail}
             images={product.images}
             size="full"
             isFeatured={isFeatured}
+            productName={product.title}
           />
           {/* Category badge */}
           {categoryName && (
-            <div className="absolute top-3 left-3">
+            <div className="absolute top-3 left-3 z-10">
               <span className="px-2.5 py-1 bg-white/90 dark:bg-gray-900/90 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
                 {categoryName}
               </span>
             </div>
           )}
-          {/* Quick view overlay */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 dark:group-hover:bg-white/5 transition-colors duration-300" />
         </div>
 
         <div className="flex flex-col gap-1 mt-4">

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
-import InteractiveLink from "@modules/common/components/interactive-link"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -48,38 +47,53 @@ export default async function CategoryTemplate({
     >
       <RefinementList sortBy={sort} data-testid="sort-by-container" />
       <div className="w-full">
-        <div className="flex flex-row mb-8 text-2xl-semi gap-4">
-          {parents &&
-            parents.map((parent) => (
-              <span key={parent.id} className="text-ui-fg-subtle">
+        {/* Breadcrumbs */}
+        {parents.length > 0 && (
+          <nav className="flex items-center gap-1.5 text-sm text-ui-fg-subtle mb-4">
+            {parents.reverse().map((parent, idx) => (
+              <span key={parent.id} className="flex items-center gap-1.5">
+                {idx > 0 && <span>/</span>}
                 <LocalizedClientLink
-                  className="mr-4 hover:text-black"
+                  className="hover:text-ui-fg-base transition-colors"
                   href={`/categories/${parent.handle}`}
                   data-testid="sort-by-link"
                 >
                   {translateCat(parent)}
                 </LocalizedClientLink>
-                /
               </span>
             ))}
-          <h1 data-testid="category-page-title">{translateCat(category)}</h1>
-        </div>
-        {category.description && (
-          <div className="mb-8 text-base-regular">
-            <p>{category.description}</p>
-          </div>
+            <span>/</span>
+            <span className="text-ui-fg-base">{translateCat(category)}</span>
+          </nav>
         )}
-        {category.category_children && (
-          <div className="mb-8 text-base-large">
-            <ul className="grid grid-cols-1 gap-2">
-              {category.category_children?.map((c) => (
-                <li key={c.id}>
-                  <InteractiveLink href={`/categories/${c.handle}`}>
-                    {translateCat(c)}
-                  </InteractiveLink>
-                </li>
-              ))}
-            </ul>
+
+        {/* Category Title */}
+        <h1
+          className="text-2xl font-semibold text-ui-fg-base mb-4"
+          data-testid="category-page-title"
+        >
+          {translateCat(category)}
+        </h1>
+
+        {/* Description */}
+        {category.description && (
+          <p className="text-ui-fg-subtle text-base mb-6">
+            {category.description}
+          </p>
+        )}
+
+        {/* Subcategory Pills */}
+        {category.category_children && category.category_children.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            {category.category_children.map((c) => (
+              <LocalizedClientLink
+                key={c.id}
+                href={`/categories/${c.handle}`}
+                className="px-3 py-1.5 rounded-full text-sm font-medium border bg-ui-bg-subtle text-ui-fg-base border-ui-border-base hover:bg-ui-bg-subtle-hover transition-colors"
+              >
+                {translateCat(c)}
+              </LocalizedClientLink>
+            ))}
           </div>
         )}
         <Suspense
