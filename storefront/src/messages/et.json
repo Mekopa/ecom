@@ -39,7 +39,22 @@
     "freeShipping": "Tasuta tarne tellimustel üle 50€",
     "selectOptions": "Vali valikud",
     "selectVariantBtn": "Vali variant",
-    "original": "Algne:"
+    "original": "Algne:",
+    "productInformation": "Toote teave",
+    "shippingReturns": "Tarnimine ja tagastamine",
+    "material": "Materjal",
+    "countryOfOrigin": "Päritoluriik",
+    "productType": "Tüüp",
+    "weight": "Kaal",
+    "dimensions": "Mõõtmed",
+    "fastDelivery": "Kiire tarne",
+    "fastDeliveryDesc": "Teie pakk jõuab 3-5 tööpäeva jooksul teie valitud asukohta või mugavalt koju.",
+    "simpleExchanges": "Lihtne vahetus",
+    "simpleExchangesDesc": "Suurus ei sobi? Pole hullu - vahetame teie toote uue vastu.",
+    "easyReturns": "Lihtne tagastamine",
+    "easyReturnsDesc": "Tagastage toode ja me tagastame teile raha. Küsimusi ei esitata - teeme kõik, et tagastamine oleks probleemivaba.",
+    "relatedProducts": "Seotud tooted",
+    "relatedProductsDesc": "Võite soovida vaadata ka neid tooteid."
   },
   "cart": {
     "title": "Ostukorv",

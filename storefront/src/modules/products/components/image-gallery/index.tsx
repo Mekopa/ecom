@@ -95,8 +95,8 @@ const ImageGallery = ({ product }: ImageGalleryProps) => {
   if (filteredImages.length === 0) {
     return (
       <div className="flex items-start relative">
-        <div className="flex flex-col flex-1 small:mx-16 gap-y-4">
-          <Container className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle flex items-center justify-center">
+        <div className="flex flex-col flex-1 gap-y-4">
+          <Container className="relative aspect-[4/3] w-full overflow-hidden bg-ui-bg-subtle flex items-center justify-center p-0">
             <PlaceholderImage size="64" />
           </Container>
         </div>
@@ -108,9 +108,9 @@ const ImageGallery = ({ product }: ImageGalleryProps) => {
 
   return (
     <div className="flex items-start relative">
-      <div className="flex flex-col flex-1 small:mx-16 gap-y-4">
+      <div className="flex flex-col flex-1 gap-y-4">
         {/* Main Image */}
-        <Container className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle">
+        <Container className="relative aspect-[4/3] w-full overflow-hidden bg-ui-bg-subtle p-0">
           {activeImage?.url && (
             <Image
               key={activeImage.url}

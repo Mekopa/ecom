@@ -39,7 +39,22 @@
     "freeShipping": "Free shipping on orders over $50",
     "selectOptions": "Select Options",
     "selectVariantBtn": "Select variant",
-    "original": "Original:"
+    "original": "Original:",
+    "productInformation": "Product Information",
+    "shippingReturns": "Shipping & Returns",
+    "material": "Material",
+    "countryOfOrigin": "Country of origin",
+    "productType": "Type",
+    "weight": "Weight",
+    "dimensions": "Dimensions",
+    "fastDelivery": "Fast delivery",
+    "fastDeliveryDesc": "Your package will arrive in 3-5 business days at your pick up location or in the comfort of your home.",
+    "simpleExchanges": "Simple exchanges",
+    "simpleExchangesDesc": "Is the fit not quite right? No worries - we'll exchange your product for a new one.",
+    "easyReturns": "Easy returns",
+    "easyReturnsDesc": "Just return your product and we'll refund your money. No questions asked - we'll do our best to make sure your return is hassle-free.",
+    "relatedProducts": "Related products",
+    "relatedProductsDesc": "You might also want to check out these products."
   },
   "cart": {
     "title": "Cart",

@@ -39,7 +39,22 @@
     "freeShipping": "Nemokamas pristatymas užsakymams virš 50€",
     "selectOptions": "Pasirinkite parinktis",
     "selectVariantBtn": "Pasirinkite variantą",
-    "original": "Originali:"
+    "original": "Originali:",
+    "productInformation": "Produkto informacija",
+    "shippingReturns": "Pristatymas ir grąžinimas",
+    "material": "Medžiaga",
+    "countryOfOrigin": "Kilmės šalis",
+    "productType": "Tipas",
+    "weight": "Svoris",
+    "dimensions": "Matmenys",
+    "fastDelivery": "Greitas pristatymas",
+    "fastDeliveryDesc": "Jūsų siunta bus pristatyta per 3-5 darbo dienas į atsiėmimo punktą arba tiesiai į namus.",
+    "simpleExchanges": "Paprastas keitimas",
+    "simpleExchangesDesc": "Netinka dydis? Nesijaudinkite - pakeisime jūsų produktą nauju.",
+    "easyReturns": "Lengvas grąžinimas",
+    "easyReturnsDesc": "Tiesiog grąžinkite produktą ir mes grąžinsime pinigus. Be jokių klausimų - padarysime viską, kad grąžinimas būtų kuo paprastesnis.",
+    "relatedProducts": "Susiję produktai",
+    "relatedProductsDesc": "Jums taip pat gali patikti šie produktai."
   },
   "cart": {
     "title": "Krepšelis",

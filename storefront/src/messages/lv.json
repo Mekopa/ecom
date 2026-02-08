@@ -39,7 +39,22 @@
     "freeShipping": "Bezmaksas piegāde pasūtījumiem virs 50€",
     "selectOptions": "Izvēlieties opcijas",
     "selectVariantBtn": "Izvēlieties variantu",
-    "original": "Oriģinālā:"
+    "original": "Oriģinālā:",
+    "productInformation": "Produkta informācija",
+    "shippingReturns": "Piegāde un atgriešana",
+    "material": "Materiāls",
+    "countryOfOrigin": "Izcelsmes valsts",
+    "productType": "Tips",
+    "weight": "Svars",
+    "dimensions": "Izmēri",
+    "fastDelivery": "Ātra piegāde",
+    "fastDeliveryDesc": "Jūsu sūtījums tiks piegādāts 3-5 darba dienu laikā uz saņemšanas punktu vai ērti uz mājām.",
+    "simpleExchanges": "Vienkārša apmaiņa",
+    "simpleExchangesDesc": "Izmērs neder? Neuztraucieties - mēs apmainīsim jūsu produktu pret jaunu.",
+    "easyReturns": "Vienkārša atgriešana",
+    "easyReturnsDesc": "Vienkārši atgrieziet produktu un mēs atgriezīsim naudu. Bez jautājumiem - mēs darīsim visu, lai atgriešana būtu vienkārša.",
+    "relatedProducts": "Saistītie produkti",
+    "relatedProductsDesc": "Jūs varētu interesēt arī šie produkti."
   },
   "cart": {
     "title": "Grozs",

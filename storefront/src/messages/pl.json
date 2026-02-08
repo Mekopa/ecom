@@ -39,7 +39,22 @@
     "freeShipping": "Darmowa dostawa przy zamówieniach powyżej 200 zł",
     "selectOptions": "Wybierz opcje",
     "selectVariantBtn": "Wybierz wariant",
-    "original": "Oryginalna:"
+    "original": "Oryginalna:",
+    "productInformation": "Informacje o produkcie",
+    "shippingReturns": "Wysyłka i zwroty",
+    "material": "Materiał",
+    "countryOfOrigin": "Kraj pochodzenia",
+    "productType": "Typ",
+    "weight": "Waga",
+    "dimensions": "Wymiary",
+    "fastDelivery": "Szybka dostawa",
+    "fastDeliveryDesc": "Twoja paczka dotrze w ciągu 3-5 dni roboczych do punktu odbioru lub pod Twoje drzwi.",
+    "simpleExchanges": "Prosta wymiana",
+    "simpleExchangesDesc": "Rozmiar nie pasuje? Bez problemu - wymienimy Twój produkt na nowy.",
+    "easyReturns": "Łatwe zwroty",
+    "easyReturnsDesc": "Po prostu zwróć produkt, a my zwrócimy Ci pieniądze. Bez pytań - zrobimy wszystko, aby zwrot był bezproblemowy.",
+    "relatedProducts": "Powiązane produkty",
+    "relatedProductsDesc": "Możesz również zainteresować się tymi produktami."
   },
   "cart": {
     "title": "Koszyk",

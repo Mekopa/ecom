@@ -1,14 +1,15 @@
-import React, { Suspense } from "react"
+import { Suspense } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
-import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
 import RelatedProducts from "@modules/products/components/related-products"
 import ProductInfo from "@modules/products/templates/product-info"
 import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-related-products"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { notFound } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
+import { getTranslations } from "next-intl/server"
 
 import ProductActionsWrapper from "./product-actions-wrapper"
 
@@ -18,47 +19,82 @@ type ProductTemplateProps = {
   countryCode: string
 }
 
-const ProductTemplate: React.FC<ProductTemplateProps> = ({
+export default async function ProductTemplate({
   product,
   region,
   countryCode,
-}) => {
+}: ProductTemplateProps) {
   if (!product || !product.id) {
     return notFound()
   }
 
+  const tCat = await getTranslations("categories")
+  const tNav = await getTranslations("nav")
+  const translateCat = (c: { handle: string; name: string }) =>
+    tCat.has(c.handle) ? tCat(c.handle) : c.name
+
+  const category = (product as any).categories?.[0] as
+    | { id: string; handle: string; name: string }
+    | undefined
+
   return (
     <>
       <div
-        className="content-container  flex flex-col small:flex-row small:items-start py-6 relative"
+        className="content-container py-6"
         data-testid="product-container"
       >
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
-          <ProductInfo product={product} />
-          <ProductTabs product={product} />
-        </div>
-        <div className="block w-full relative">
-          <Suspense
-            fallback={
-              <div className="relative aspect-[29/34] w-full bg-ui-bg-subtle small:mx-16" />
-            }
-          >
-            <ImageGallery product={product} />
-          </Suspense>
-        </div>
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
-          <ProductOnboardingCta />
-          <Suspense
-            fallback={
-              <ProductActions
-                disabled={true}
-                product={product}
-                region={region}
-              />
-            }
-          >
-            <ProductActionsWrapper id={product.id} region={region} />
-          </Suspense>
+        {category && (
+          <nav className="flex items-center gap-1.5 text-sm text-ui-fg-subtle mb-4">
+            <LocalizedClientLink
+              href="/"
+              className="hover:text-ui-fg-base transition-colors"
+            >
+              {tNav("home")}
+            </LocalizedClientLink>
+            <span>/</span>
+            <LocalizedClientLink
+              href={`/categories/${category.handle}`}
+              className="hover:text-ui-fg-base transition-colors"
+            >
+              {translateCat(category)}
+            </LocalizedClientLink>
+            <span>/</span>
+            <span className="text-ui-fg-base line-clamp-1">
+              {product.title}
+            </span>
+          </nav>
+        )}
+
+        <div className="flex flex-col small:flex-row small:items-start small:gap-x-10 medium:gap-x-16">
+          {/* LEFT — Gallery (first in DOM = first on mobile) */}
+          <div className="w-full small:w-[55%] medium:w-[60%]">
+            <div className="small:sticky small:top-48">
+              <Suspense
+                fallback={
+                  <div className="relative aspect-[4/3] w-full bg-ui-bg-subtle" />
+                }
+              >
+                <ImageGallery product={product} />
+              </Suspense>
+            </div>
+          </div>
+
+          {/* RIGHT — Info + Actions + Tabs */}
+          <div className="w-full small:w-[45%] medium:w-[40%] flex flex-col gap-y-6 py-6 small:py-0">
+            <ProductInfo product={product} />
+            <Suspense
+              fallback={
+                <ProductActions
+                  disabled={true}
+                  product={product}
+                  region={region}
+                />
+              }
+            >
+              <ProductActionsWrapper id={product.id} region={region} />
+            </Suspense>
+            <ProductTabs product={product} />
+          </div>
         </div>
       </div>
       <div
@@ -72,5 +108,3 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     </>
   )
 }
-
-export default ProductTemplate

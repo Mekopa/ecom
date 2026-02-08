@@ -39,7 +39,22 @@
     "freeShipping": "50₺ üzeri siparişlerde ücretsiz kargo",
     "selectOptions": "Seçenekleri Seçin",
     "selectVariantBtn": "Varyant seçin",
-    "original": "Orijinal:"
+    "original": "Orijinal:",
+    "productInformation": "Ürün Bilgileri",
+    "shippingReturns": "Kargo ve İade",
+    "material": "Malzeme",
+    "countryOfOrigin": "Menşe ülke",
+    "productType": "Tür",
+    "weight": "Ağırlık",
+    "dimensions": "Boyutlar",
+    "fastDelivery": "Hızlı teslimat",
+    "fastDeliveryDesc": "Paketiniz 3-5 iş günü içinde teslim noktanıza veya evinize ulaşacaktır.",
+    "simpleExchanges": "Kolay değişim",
+    "simpleExchangesDesc": "Beden uygun değil mi? Sorun değil - ürününüzü yenisiyle değiştireceğiz.",
+    "easyReturns": "Kolay iade",
+    "easyReturnsDesc": "Ürünü iade edin, paranızı geri ödeyelim. Soru sormadan - iadenizi sorunsuz hale getirmek için elimizden geleni yapacağız.",
+    "relatedProducts": "İlgili ürünler",
+    "relatedProductsDesc": "Bu ürünlere de göz atmak isteyebilirsiniz."
   },
   "cart": {
     "title": "Sepet",

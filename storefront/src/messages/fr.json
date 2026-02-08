@@ -39,7 +39,22 @@
     "freeShipping": "Livraison gratuite dès 50€",
     "selectOptions": "Choisir les options",
     "selectVariantBtn": "Sélectionner une variante",
-    "original": "Original :"
+    "original": "Original :",
+    "productInformation": "Informations produit",
+    "shippingReturns": "Livraison & Retours",
+    "material": "Matière",
+    "countryOfOrigin": "Pays d'origine",
+    "productType": "Type",
+    "weight": "Poids",
+    "dimensions": "Dimensions",
+    "fastDelivery": "Livraison rapide",
+    "fastDeliveryDesc": "Votre colis arrivera en 3 à 5 jours ouvrables à votre point de retrait ou à votre domicile.",
+    "simpleExchanges": "Échanges simples",
+    "simpleExchangesDesc": "La taille ne convient pas ? Pas de souci - nous échangerons votre produit contre un nouveau.",
+    "easyReturns": "Retours faciles",
+    "easyReturnsDesc": "Retournez simplement votre produit et nous vous rembourserons. Sans questions - nous ferons de notre mieux pour faciliter votre retour.",
+    "relatedProducts": "Produits similaires",
+    "relatedProductsDesc": "Vous pourriez aussi aimer ces produits."
   },
   "cart": {
     "title": "Panier",
