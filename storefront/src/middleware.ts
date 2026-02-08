@@ -96,10 +96,43 @@ async function getRegionMap(cacheId: string) {
 }
 
 /**
- * Fetches regions from Medusa and sets the region cookie.
- * @param request
- * @param response
+ * Looks up country code from IP address using geojs.io.
+ * Only called on first visit (no cookie). Returns 2-letter country code or undefined.
+ * Has a 1.5s timeout to avoid blocking page loads if the service is slow.
  */
+async function getCountryFromIP(
+  request: NextRequest
+): Promise<string | undefined> {
+  const ip =
+    request.headers.get("x-envoy-external-address") ||
+    request.headers.get("x-real-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",").pop()?.trim()
+
+  if (!ip || ip === "unknown" || ip === "127.0.0.1" || ip === "::1") {
+    return undefined
+  }
+
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 1500)
+
+    const res = await fetch(`https://get.geojs.io/v1/ip/country/${ip}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    })
+
+    clearTimeout(timeout)
+
+    if (!res.ok) return undefined
+
+    const country = (await res.text()).trim().toLowerCase()
+    return country.length === 2 ? country : undefined
+  } catch {
+    // Timeout or network error — silently fall through
+    return undefined
+  }
+}
+
 /**
  * Parses Accept-Language header to detect user's country.
  * Examples:
@@ -175,18 +208,25 @@ async function getCountryCode(
       // 4. Cloudflare geo-IP header
       countryCode = cfCountryCode
     } else {
-      // 5. Browser Accept-Language header
-      const acceptLangCountry = getCountryFromAcceptLanguage(
-        request.headers.get("accept-language"),
-        regionMap
-      )
-      if (acceptLangCountry) {
-        countryCode = acceptLangCountry
-      } else if (regionMap.has(DEFAULT_REGION)) {
-        // 6. Default region fallback
-        countryCode = DEFAULT_REGION
-      } else if (regionMap.keys().next().value) {
-        countryCode = regionMap.keys().next().value
+      // 5. IP-based geo-lookup (Railway/generic hosting — only when no cookie exists)
+      const hasCountryCookie = !!request.cookies.get("_medusa_country")?.value
+      const ipCountry = hasCountryCookie ? undefined : await getCountryFromIP(request)
+      if (ipCountry && regionMap.has(ipCountry)) {
+        countryCode = ipCountry
+      } else {
+        // 6. Browser Accept-Language header
+        const acceptLangCountry = getCountryFromAcceptLanguage(
+          request.headers.get("accept-language"),
+          regionMap
+        )
+        if (acceptLangCountry) {
+          countryCode = acceptLangCountry
+        } else if (regionMap.has(DEFAULT_REGION)) {
+          // 7. Default region fallback
+          countryCode = DEFAULT_REGION
+        } else if (regionMap.keys().next().value) {
+          countryCode = regionMap.keys().next().value
+        }
       }
     }
 
