@@ -2,6 +2,7 @@ import { Suspense } from "react"
 
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
+import MobileSortDrawer from "@modules/store/components/mobile-sort-drawer"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import { HttpTypes } from "@medusajs/types"
@@ -27,6 +28,7 @@ export default function CollectionTemplate({
         <div className="mb-8 text-2xl-semi">
           <h1>{collection.title}</h1>
         </div>
+        <MobileSortDrawer sortBy={sort} />
         <Suspense
           fallback={
             <SkeletonProductGrid

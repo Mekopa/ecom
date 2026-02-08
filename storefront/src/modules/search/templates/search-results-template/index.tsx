@@ -2,6 +2,7 @@ import { Heading, Text } from "@medusajs/ui"
 import Link from "next/link"
 
 import RefinementList from "@modules/store/components/refinement-list"
+import MobileSortDrawer from "@modules/store/components/mobile-sort-drawer"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -44,6 +45,7 @@ const SearchResultsTemplate = ({
           <>
             <RefinementList sortBy={sortBy || "created_at"} search />
             <div className="content-container">
+              <MobileSortDrawer sortBy={sortBy || "created_at"} />
               <PaginatedProducts
                 productsIds={ids}
                 sortBy={sortBy}

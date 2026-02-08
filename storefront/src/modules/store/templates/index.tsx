@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server"
 
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
+import MobileSortDrawer from "@modules/store/components/mobile-sort-drawer"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 
 import PaginatedProducts from "./paginated-products"
@@ -30,6 +31,7 @@ const StoreTemplate = async ({
         <div className="mb-8 text-2xl-semi">
           <h1 data-testid="store-page-title">{t("allProducts")}</h1>
         </div>
+        <MobileSortDrawer sortBy={sort} />
         <Suspense fallback={<SkeletonProductGrid />}>
           <PaginatedProducts
             sortBy={sort}

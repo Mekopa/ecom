@@ -5,6 +5,7 @@ import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-g
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
+import MobileSortDrawer from "@modules/store/components/mobile-sort-drawer"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { getTranslations } from "next-intl/server"
@@ -96,6 +97,7 @@ export default async function CategoryTemplate({
             ))}
           </div>
         )}
+        <MobileSortDrawer sortBy={sort} />
         <Suspense
           fallback={
             <SkeletonProductGrid
