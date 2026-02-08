@@ -25,7 +25,9 @@
     "newArrivals": "Yeni ürünler stokta",
     "freeShipping": "Ücretsiz Kargo",
     "secureCheckout": "Güvenli Ödeme",
-    "returns": "30 Gün İade"
+    "returns": "30 Gün İade",
+    "trustWarranty": "12 Ay Garanti",
+    "categoryProductCount": "{count} ürün"
   },
   "product": {
     "addToCart": "Sepete Ekle",

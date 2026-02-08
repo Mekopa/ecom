@@ -133,6 +133,10 @@ module.exports = {
           "0%": { transform: "translateY(100%)" },
           "100%": { transform: "translateY(0)" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
       animation: {
         ring: "ring 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
@@ -146,6 +150,7 @@ module.exports = {
         leave: "leave 150ms ease-in forwards",
         "backdrop-fade-in": "backdrop-fade-in 200ms ease-out",
         "sheet-slide-up": "sheet-slide-up 250ms cubic-bezier(0.32, 0.72, 0, 1)",
+        float: "float 6s ease-in-out infinite",
       },
     },
   },

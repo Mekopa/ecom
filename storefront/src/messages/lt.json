@@ -25,7 +25,9 @@
     "newArrivals": "Naujienos sandėlyje",
     "freeShipping": "Nemokamas pristatymas",
     "secureCheckout": "Saugus atsiskaitymas",
-    "returns": "30 dienų grąžinimas"
+    "returns": "30 dienų grąžinimas",
+    "trustWarranty": "12 Mėnesių Garantija",
+    "categoryProductCount": "{count} prekių"
   },
   "product": {
     "addToCart": "Į krepšelį",

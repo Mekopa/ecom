@@ -25,7 +25,9 @@
     "newArrivals": "Jaunumi noliktavā",
     "freeShipping": "Bezmaksas piegāde",
     "secureCheckout": "Droša apmaksa",
-    "returns": "30 dienu atgriešana"
+    "returns": "30 dienu atgriešana",
+    "trustWarranty": "12 Mēnešu Garantija",
+    "categoryProductCount": "{count} produkti"
   },
   "product": {
     "addToCart": "Pievienot grozam",

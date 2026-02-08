@@ -25,7 +25,9 @@
     "newArrivals": "Nouveautés en stock",
     "freeShipping": "Livraison gratuite",
     "secureCheckout": "Paiement sécurisé",
-    "returns": "Retours sous 30 jours"
+    "returns": "Retours sous 30 jours",
+    "trustWarranty": "Garantie 12 Mois",
+    "categoryProductCount": "{count} produits"
   },
   "product": {
     "addToCart": "Ajouter au panier",

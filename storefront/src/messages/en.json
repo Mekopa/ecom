@@ -25,7 +25,9 @@
     "newArrivals": "New arrivals in stock",
     "freeShipping": "Free Shipping",
     "secureCheckout": "Secure Checkout",
-    "returns": "30-Day Returns"
+    "returns": "30-Day Returns",
+    "trustWarranty": "12-Month Warranty",
+    "categoryProductCount": "{count} products"
   },
   "product": {
     "addToCart": "Add to Cart",

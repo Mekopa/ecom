@@ -25,7 +25,9 @@
     "newArrivals": "Uued tooted laos",
     "freeShipping": "Tasuta tarne",
     "secureCheckout": "Turvaline maksmine",
-    "returns": "30-päevane tagastus"
+    "returns": "30-päevane tagastus",
+    "trustWarranty": "12 Kuu Garantii",
+    "categoryProductCount": "{count} toodet"
   },
   "product": {
     "addToCart": "Lisa ostukorvi",
