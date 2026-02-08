@@ -96,7 +96,7 @@ const ImageGallery = ({ product }: ImageGalleryProps) => {
     return (
       <div className="flex items-start relative">
         <div className="flex flex-col flex-1 gap-y-4">
-          <Container className="relative aspect-[4/3] w-full overflow-hidden bg-ui-bg-subtle flex items-center justify-center p-0">
+          <Container className="relative aspect-[4/3] w-full overflow-hidden bg-ui-bg-subtle dark:bg-gray-800 flex items-center justify-center p-0">
             <PlaceholderImage size="64" />
           </Container>
         </div>
